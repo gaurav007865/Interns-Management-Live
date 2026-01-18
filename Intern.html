@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Intern Panel</title>
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    /* ✅ Section Switch */
+    .pageSection{ display:none; }
+    .pageSection.active{ display:block; }
+
+    .miniGrid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+    }
+
+    .progressBar{
+      width:100%;
+      height:14px;
+      border-radius:999px;
+      background: rgba(255,255,255,0.08);
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,0.10);
+      margin-top:10px;
+    }
+    .progressFill{
+      height:100%;
+      width:0%;
+      background: linear-gradient(135deg, var(--p1), var(--p3));
+      box-shadow: 0 0 25px rgba(124,0,255,0.25);
+      transition: 0.4s;
+    }
+
+    @media(max-width:1000px){
+      .miniGrid{ grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="appShell">
+
+      <!-- ✅ SIDEBAR -->
+      <aside class="sidebar">
+        <div class="sideTop">
+          <div class="brandBox">
+            <div class="brandLogo">
+              <img src="logo.png" alt="COD Logo">
+            </div>
+            <div class="brandText">
+              <h3>COD PANEL</h3>
+              <p>Intern Dashboard</p>
+            </div>
+          </div>
+
+          <div class="rolePill" id="internPill">INT</div>
+        </div>
+
+        <div class="nav" id="internNav">
+          <a class="active" href="javascript:void(0)" onclick="switchPage('todayPage', this)">📌 Today’s Task</a>
+          <a href="javascript:void(0)" onclick="switchPage('historyPage', this)">📚 Task History</a>
+          <a href="javascript:void(0)" onclick="switchPage('submitPage', this)">📤 Submit Task</a>
+          <a href="javascript:void(0)" onclick="switchPage('progressPage', this)">📊 Progress</a>
+          <a href="javascript:void(0)" onclick="switchPage('streakPage', this)">🔥 Streak</a>
+          <a href="javascript:void(0)" onclick="switchPage('messagesPage', this)">💬 Messages</a>
+          <a href="javascript:void(0)" onclick="switchPage('profilePage', this)">👤 Profile</a>
+        </div>
+
+        <div class="sideFooter">
+          ✅ Submit GitHub/Deploy link<br/>
+          ✅ Grade by Admin<br/>
+          ✅ Full History Safe
+        </div>
+      </aside>
+
+      <!-- ✅ MAIN -->
+      <main class="main">
+
+        <!-- ✅ TOPBAR -->
+        <div class="topbar">
+          <div class="titleWrap">
+            <h1>👨‍💻 Intern Panel</h1>
+            <p id="internInfo">Loading...</p>
+          </div>
+          <div class="actions">
+            <button class="btn ghost" onclick="init()">🔄 Refresh</button>
+            <button class="btn danger" onclick="logout()">Logout</button>
+          </div>
+        </div>
+
+        <!-- ✅ 1) TODAY -->
+        <section class="card pageSection active" id="todayPage">
+          <div class="cardHead">
+            <div>
+              <h2>📌 Today’s Task</h2>
+              <span id="todayMeta">Loading...</span>
+            </div>
+          </div>
+
+          <div class="tableWrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>TaskID</th>
+                  <th>Task</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="todayTable"></tbody>
+            </table>
+          </div>
+
+          <div class="small">
+            ✅ Batch task + Personal task dono yaha show honge.
+          </div>
+        </section>
+
+        <!-- ✅ 2) HISTORY -->
+        <section class="card pageSection" id="historyPage">
+          <div class="cardHead">
+            <div>
+              <h2>📚 Task History</h2>
+              <span>Pending/Completed + Grade</span>
+            </div>
+          </div>
+
+          <div class="tableWrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Title</th>
+                  <th>Status</th>
+                  <th>Grade</th>
+                </tr>
+              </thead>
+              <tbody id="historyTable"></tbody>
+            </table>
+          </div>
+
+          <div class="small">
+            ✅ Grade nahi diya to “Not Seen” show hoga.
+          </div>
+        </section>
+
+        <!-- ✅ 3) SUBMIT TASK -->
+        <section class="card pageSection" id="submitPage">
+          <div class="cardHead">
+            <div>
+              <h2>📤 Submit Task</h2>
+              <span>Task auto select (Today tasks)</span>
+            </div>
+          </div>
+
+          <label>Select Today Task</label>
+          <select id="submitTaskSelect"></select>
+
+          <label>Submission Link (GitHub / Deploy)</label>
+          <input id="submitLink" placeholder="https://github.com/..." />
+
+          <label>Details (optional)</label>
+          <textarea id="submitDetails" placeholder="What you did today..."></textarea>
+
+          <button class="btn primary" onclick="submitTask()">Submit</button>
+
+          <div class="small">
+            ✅ Submit ke baad 5 minutes tak edit allowed.
+          </div>
+
+          <label style="margin-top:14px;">Edit SubmissionID (Within 5 mins)</label>
+          <input id="editSubmissionId" placeholder="SUB0001" />
+          <button class="btn" onclick="editSubmission()">Edit Submission</button>
+        </section>
+
+        <!-- ✅ 4) PROGRESS -->
+        <section class="card pageSection" id="progressPage">
+          <div class="cardHead">
+            <div>
+              <h2>📊 Progress</h2>
+              <span>Grades based</span>
+            </div>
+          </div>
+
+          <div class="miniGrid">
+            <div>
+              <div class="small">Overall Score</div>
+              <h2 style="margin-top:8px;"><span id="progressPercent">0</span>%</h2>
+
+              <div class="progressBar">
+                <div class="progressFill" id="progressFill"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="small">Grade rules</div>
+              <div class="small" style="margin-top:10px;">
+                ✅ A+ = 100%<br/>
+                ✅ A = 90%<br/>
+                ✅ B = 75%<br/>
+                ✅ C = 55%<br/>
+                ✅ 0-10 = x10 score
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ✅ 5) STREAK -->
+        <section class="card pageSection" id="streakPage">
+          <div class="cardHead">
+            <div>
+              <h2>🔥 Streak</h2>
+              <span>Daily submissions</span>
+            </div>
+          </div>
+
+          <h2 style="margin-top:4px;">🔥 <span id="streakCount">0</span> days</h2>
+          <div class="small">✅ Streak = kitne din se continuous submit ho raha hai.</div>
+        </section>
+
+
+
+        <!-- ✅ 6) MESSAGES -->
+<section class="card pageSection" id="messagesPage">
+  <div class="cardHead">
+    <div>
+      <h2>💬 Messages</h2>
+      <span>Admin ↔ Intern (Auto delete in 48h)</span>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <button class="btn" onclick="loadMyChat()">🔄 Refresh</button>
+      <button class="btn danger" onclick="internClearChat()">🧹 Clear Chat</button>
+    </div>
+  </div>
+
+  <div class="tableWrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Sender</th>
+          <th>Message</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody id="internChatTable"></tbody>
+    </table>
+  </div>
+
+  <label style="margin-top:12px;">Send Message to Admin</label>
+  <input id="internChatMsg" placeholder="Type message..." />
+  <button class="btn primary" onclick="internSendMsg()">Send</button>
+
+  <div class="small">
+    ✅ Message automatically 48 hours me delete ho jayega.
+  </div>
+</section>
+
+
+        <!-- ✅ 7) PROFILE -->
+        <section class="card pageSection" id="profilePage">
+          <div class="cardHead">
+            <div>
+              <h2>👤 Profile</h2>
+              <span>Change Password</span>
+            </div>
+          </div>
+
+          <label>Old Password</label>
+          <input id="oldPass" type="password" placeholder="Old password" />
+
+          <label>New Password</label>
+          <input id="newPass" type="password" placeholder="New password" />
+
+          <button class="btn primary" onclick="changePassword()">Change Password</button>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Loader + Toast -->
+  <div id="loaderOverlay" class="loaderOverlay">
+    <div class="loaderCard">
+      <div class="spinner"></div>
+      <div id="loaderText">Loading...</div>
+    </div>
+  </div>
+  <div id="toast" class="toast"></div>
+
+  <script src="app.js"></script>
+
+  <script>
+
+
+const visitedInternPages = {
+  todayPage:false,
+  historyPage:false,
+  submitPage:false,
+  progressPage:false,
+  streakPage:false,
+  messagesPage:false,
+  profilePage:false
+};
+
+
+    const intern = getSession("intern");
+    if(!intern) window.location.href="index.html";
+
+    document.getElementById("internPill").innerText = intern.InternID;
+    document.getElementById("internInfo").innerText =
+      `Welcome, ${intern.Name} • Batch: ${intern.Batch} • Duration: ${intern.Duration}`;
+
+    // ✅ Switch page
+    function switchPage(pageId, navEl){
+      document.querySelectorAll(".pageSection").forEach(s=>s.classList.remove("active"));
+      document.getElementById(pageId).classList.add("active");
+
+      document.querySelectorAll("#internNav a").forEach(a=>a.classList.remove("active"));
+      navEl.classList.add("active");
+    }
+
+    function pill(status){
+      const s = (status||"").toLowerCase();
+      if(s.includes("approved")) return `<span class="pill ok">${status}</span>`;
+      if(s.includes("rejected")) return `<span class="pill bad">${status}</span>`;
+      if(s.includes("submitted") || s.includes("pending")) return `<span class="pill warn">${status}</span>`;
+      return `<span class="pill">${status||"-"}</span>`;
+    }
+
+    async function loadToday(silent=false){
+      showLoader(true,"Loading Today...", silent);
+      const data = await apiGET({action:"getInternToday", internId: intern.InternID});
+      showLoader(false,"", silent);
+
+      if(!data.success){ toast(data.message,"error"); return; }
+
+      document.getElementById("todayMeta").innerText = `Date: ${data.today}`;
+
+      const tb = document.getElementById("todayTable");
+      tb.innerHTML = "";
+
+      if((data.tasks||[]).length === 0){
+        tb.innerHTML = `<tr><td colspan="3">No task assigned today ✅</td></tr>`;
+      }else{
+        data.tasks.forEach(t=>{
+          tb.innerHTML += `
+            <tr>
+              <td><b>${t.AssignedTaskID}</b></td>
+              <td>
+                <b>${t.Title}</b><br/>
+                <span style="color:var(--muted);font-size:12px;">${t.Description}</span>
+              </td>
+              <td>${pill(t.Status)}</td>
+            </tr>
+          `;
+        });
+      }
+
+      // ✅ Submit dropdown auto
+      const sel = document.getElementById("submitTaskSelect");
+      if((data.tasks||[]).length===0){
+        sel.innerHTML = `<option value="">No task today</option>`;
+      }else{
+        sel.innerHTML = data.tasks.map(t=>`<option value="${t.AssignedTaskID}">${t.Title} (${t.AssignedTaskID})</option>`).join("");
+      }
+    }
+
+    async function loadHistory(silent=false){
+      showLoader(true,"Loading History...", silent);
+      const data = await apiGET({action:"getInternHistory", internId: intern.InternID});
+      showLoader(false,"", silent);
+
+      if(!data.success){ toast(data.message,"error"); return; }
+
+      const tb = document.getElementById("historyTable");
+      tb.innerHTML = "";
+
+      if((data.history||[]).length===0){
+        tb.innerHTML = `<tr><td colspan="4">No history ✅</td></tr>`;
+        return;
+      }
+
+      data.history.slice(0,50).forEach(h=>{
+        tb.innerHTML += `
+          <tr>
+            <td>${h.Date}</td>
+            <td>${h.Title}</td>
+            <td>${pill(h.Status)}</td>
+            <td><b>${h.Grade || "Not Seen"}</b></td>
+          </tr>
+        `;
+      });
+    }
+
+    async function submitTask(){
+      const assignedTaskId = document.getElementById("submitTaskSelect").value;
+      const link = document.getElementById("submitLink").value.trim();
+      const details = document.getElementById("submitDetails").value.trim();
+
+      if(!assignedTaskId){ toast("Select task first ❌","error"); return; }
+      if(!link){ toast("Submission link required ❌","error"); return; }
+
+      showLoader(true,"Submitting...");
+      const data = await apiPOST({
+        action:"internSubmitTask",
+        internId: intern.InternID,
+        assignedTaskId,
+        link,
+        details
+      });
+      showLoader(false);
+
+      if(data.success){
+        toast("Submitted ✅","success");
+        document.getElementById("editSubmissionId").value = data.submissionId;
+        loadToday();
+        loadHistory();
+        loadProgress();
+        loadStreak();
+      }else toast(data.message,"error");
+    }
+
+    async function editSubmission(){
+      const submissionId = document.getElementById("editSubmissionId").value.trim();
+      const link = document.getElementById("submitLink").value.trim();
+      const details = document.getElementById("submitDetails").value.trim();
+
+      if(!submissionId){ toast("SubmissionID required ❌","error"); return; }
+
+      showLoader(true,"Editing (5 min rule)...");
+      const data = await apiPOST({
+        action:"internEditSubmission",
+        internId: intern.InternID,
+        submissionId,
+        link,
+        details
+      });
+      showLoader(false);
+
+      if(data.success){
+        toast("Edited ✅","success");
+        loadHistory();
+      }else toast(data.message,"error");
+    }
+
+    async function loadProgress(silent=false){
+      const data = await apiGET({action:"getInternProgress", internId: intern.InternID});
+      if(!data.success) return;
+
+      const percent = data.percent || 0;
+      document.getElementById("progressPercent").innerText = percent;
+      document.getElementById("progressFill").style.width = percent + "%";
+    }
+
+    async function loadStreak(silent=false){
+      const data = await apiGET({action:"getInternStreak", internId: intern.InternID});
+      if(!data.success) return;
+      document.getElementById("streakCount").innerText = data.streak || 0;
+    }
+
+    async function changePassword(){
+      const oldPassword = document.getElementById("oldPass").value.trim();
+      const newPassword = document.getElementById("newPass").value.trim();
+
+      if(!oldPassword || !newPassword){
+        toast("Fill both passwords ❌","error"); return;
+      }
+
+      showLoader(true,"Changing Password...");
+      const data = await apiPOST({
+        action:"internChangePassword",
+        internId: intern.InternID,
+        oldPassword,
+        newPassword
+      });
+      showLoader(false);
+
+      if(data.success){
+        toast("Password Changed ✅","success");
+        document.getElementById("oldPass").value="";
+        document.getElementById("newPass").value="";
+      }else toast(data.message,"error");
+    }
+
+    async function init(){
+      await loadToday();
+      await loadHistory();
+      await loadProgress();
+      await loadStreak();
+      await loadMyChat();
+
+    }
+
+
+    async function loadMyChat(silent=false){
+  showLoader(true,"Loading Messages...", silent);
+  const data = await apiGET({
+    action:"internGetChat",
+    internId: intern.InternID
+  });
+  showLoader(false,"", silent);
+
+  const tb = document.getElementById("internChatTable");
+  tb.innerHTML = "";
+
+  if(!data.success){
+    tb.innerHTML = `<tr><td colspan="3">${data.message}</td></tr>`;
+    return;
+  }
+
+  if((data.messages||[]).length===0){
+    tb.innerHTML = `<tr><td colspan="3">No messages ✅</td></tr>`;
+    return;
+  }
+
+  data.messages.forEach(m=>{
+    tb.innerHTML += `
+      <tr>
+        <td><b>${m.Sender}</b></td>
+        <td>${m.Message}</td>
+        <td>${m.CreatedAt}</td>
+      </tr>
+    `;
+  });
+}
+
+async function internSendMsg(){
+  const message = document.getElementById("internChatMsg").value.trim();
+  if(!message){ toast("Message empty ❌","error"); return; }
+
+  showLoader(true,"Sending...");
+  const data = await apiGET({
+    action:"sendMessageGET",
+    internId: intern.InternID,
+    sender:"Intern",
+    message
+  });
+  showLoader(false);
+
+  if(data.success){
+    toast("Sent ✅","success");
+    document.getElementById("internChatMsg").value = "";
+    loadMyChat();
+  }else toast(data.message,"error");
+}
+
+
+async function internClearChat(){
+  showLoader(true,"Clearing Chat...");
+  const data = await apiGET({
+    action:"clearChatGET",
+    internId: intern.InternID,
+    by:"Intern"
+  });
+  showLoader(false);
+
+  if(data.success){
+    toast("Chat cleared ✅","success");
+    loadMyChat();
+  }else toast(data.message,"error");
+}
+
+let INTERN_AUTO_TIMER = null;
+
+function startAutoRefreshIntern(){
+  if(INTERN_AUTO_TIMER) clearInterval(INTERN_AUTO_TIMER);
+
+  INTERN_AUTO_TIMER = setInterval(async ()=>{
+    if(document.hidden) return;
+
+    const activePage = document.querySelector(".pageSection.active")?.id || "";
+
+    if(activePage === "todayPage") await loadToday(true);
+    if(activePage === "historyPage") await loadHistory(true);
+    if(activePage === "progressPage") await loadProgress(true);
+    if(activePage === "streakPage") await loadStreak(true);
+    if(activePage === "messagesPage") await loadMyChat(true);
+
+  }, 5000);
+}
+
+async function loadInterns(silent=false){
+  showLoader(true,"Loading Students...", silent);
+
+  const batchId = document.getElementById("filterBatch").value;
+  const sort = document.getElementById("sortType").value;
+
+  const data = await apiGET({
+    action:"getInternsList",
+    adminId: admin.adminId,
+    adminPass: admin.adminPass,
+    batchId,
+    sort
+  });
+
+  showLoader(false,"", silent);
+
+  if(!data.success){
+    if(!silent) toast(data.message,"error"); // ✅ silent me toast bhi nahi
+    return;
+  }
+
+  // ✅ update UI normally (no loader)
+  const tb = document.getElementById("internTable");
+  tb.innerHTML = "";
+  
+}
+
+
+
+    init();
+    startAutoRefreshIntern();
+
+  </script>
+</body>
+</html>

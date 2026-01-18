@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>COD Internship System - Login</title>
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    /* ✅ Extra Premium Login Layout (Only for index page) */
+    .loginGrid{
+      display:grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap:18px;
+      margin-top:18px;
+    }
+
+    .heroCard{
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(124,0,255,0.12), rgba(255,255,255,0.02));
+      box-shadow: var(--shadow);
+      padding:22px;
+      overflow:hidden;
+      position:relative;
+    }
+
+    .heroCard::after{
+      content:"";
+      position:absolute;
+      right:-160px;top:-160px;
+      width:360px;height:360px;
+      background: radial-gradient(circle, rgba(255,45,247,0.20), transparent 70%);
+      filter: blur(2px);
+      pointer-events:none;
+    }
+
+    .heroTop{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .heroLogo{
+      width:62px;height:62px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.18);
+      overflow:hidden;
+      box-shadow: 0 0 60px rgba(124,0,255,0.20);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .heroLogo img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    .heroTitle h1{
+      font-family: Orbitron, Inter, Arial;
+      font-size:20px;
+      letter-spacing:0.8px;
+      font-weight:900;
+    }
+    .heroTitle p{
+      color: var(--muted);
+      margin-top:6px;
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    .featureList{
+      margin-top:18px;
+      display:grid;
+      gap:10px;
+    }
+
+    .featureItem{
+      display:flex;
+      gap:10px;
+      padding:12px 12px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.14);
+    }
+
+    .iconDot{
+      width:38px;height:38px;
+      border-radius:14px;
+      border:1px solid rgba(124,0,255,0.22);
+      background: linear-gradient(135deg, rgba(124,0,255,0.25), rgba(255,45,247,0.12));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:900;
+      box-shadow: 0 0 35px rgba(124,0,255,0.18);
+    }
+
+    .featureItem b{
+      display:block;
+      font-size:13px;
+      font-weight:900;
+      letter-spacing:0.2px;
+    }
+    .featureItem span{
+      display:block;
+      color:var(--muted);
+      font-size:12px;
+      margin-top:4px;
+      line-height:1.45;
+    }
+
+    .loginCard{
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,0.03);
+      box-shadow: var(--shadow);
+      padding:18px;
+      overflow:hidden;
+      position:relative;
+    }
+
+    .loginCard::before{
+      content:"";
+      position:absolute;
+      left:-120px;bottom:-120px;
+      width:260px;height:260px;
+      background: radial-gradient(circle, rgba(124,0,255,0.22), transparent 70%);
+      pointer-events:none;
+    }
+
+    .tabRow{
+      display:flex;
+      gap:10px;
+      padding:8px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.16);
+      overflow:auto;
+    }
+    .tabBtn{
+      flex:1;
+      min-width:120px;
+      padding:10px 12px;
+      border-radius:16px;
+      cursor:pointer;
+      border:1px solid transparent;
+      background: rgba(255,255,255,0.02);
+      color: var(--muted);
+      font-weight:900;
+      transition:0.2s;
+      text-align:center;
+      white-space:nowrap;
+    }
+    .tabBtn.active{
+      color: var(--text);
+      border-color: rgba(124,0,255,0.35);
+      background: linear-gradient(135deg, rgba(124,0,255,0.25), rgba(255,45,247,0.12));
+      box-shadow: 0 0 35px rgba(124,0,255,0.15);
+    }
+
+    .tabPanel{
+      display:none;
+      margin-top:14px;
+      padding-top:14px;
+      border-top:1px solid rgba(255,255,255,0.08);
+    }
+    .tabPanel.show{display:block;}
+
+    .formTitle{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:10px;
+    }
+    .formTitle h2{
+      font-size:15px;
+      font-weight:900;
+      letter-spacing:0.2px;
+    }
+    .formTitle span{
+      font-size:12px;
+      color:var(--muted);
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.14);
+      padding:6px 10px;
+      border-radius:999px;
+    }
+
+    @media(max-width: 1000px){
+      .loginGrid{grid-template-columns:1fr;}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="titleWrap">
+        <h1>⚡ COD Internship Task System</h1>
+        <p>Premium dashboard for task assignment, submissions & grading</p>
+      </div>
+
+      <div class="actions">
+        <button class="btn ghost" onclick="window.location.reload()">🔄 Reload</button>
+      </div>
+    </div>
+
+    <!-- Premium Login Grid -->
+    <div class="loginGrid">
+
+      <!-- Left: Brand / Features -->
+      <section class="heroCard">
+        <div class="heroTop">
+          <div class="heroLogo">
+            <img src="logo.png" alt="COD Logo">
+          </div>
+          <div class="heroTitle">
+            <h1>COD PANEL</h1>
+            <p>
+              Admin creates interns, assigns tasks batch-wise at 11 AM,
+              interns submit GitHub/Deploy links, admin checks & grades.
+            </p>
+          </div>
+        </div>
+
+        <div class="featureList">
+          <div class="featureItem">
+            <div class="iconDot">✅</div>
+            <div>
+              <b>Batch-wise Task System</b>
+              <span>Ek click me pura batch ko daily task assign karo.</span>
+            </div>
+          </div>
+
+          <div class="featureItem">
+            <div class="iconDot">⚡</div>
+            <div>
+              <b>Fast Submissions</b>
+              <span>Intern GitHub / Deployment link submit karega instantly.</span>
+            </div>
+          </div>
+
+          <div class="featureItem">
+            <div class="iconDot">🎯</div>
+            <div>
+              <b>Grade + Remarks</b>
+              <span>Admin approve/reject + grade + feedback de sakta hai.</span>
+            </div>
+          </div>
+
+          <div class="featureItem">
+            <div class="iconDot">📚</div>
+            <div>
+              <b>History Saved</b>
+              <span>6/9 months ki full progress history maintain rahegi.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="small" style="margin-top:14px;">
+          💜 COD Theme • Neon Purple UI • Premium Glass Cards
+        </div>
+      </section>
+
+      <!-- Right: Tabbed Login -->
+      <section class="loginCard">
+
+        <!-- Tabs -->
+        <div class="tabRow">
+          <div class="tabBtn active" onclick="openTab('adminTab')">👑 Admin</div>
+          <div class="tabBtn" onclick="openTab('internTab')">👨‍💻 Intern</div>
+          <div class="tabBtn" onclick="openTab('passTab')">🔐 Set Password</div>
+        </div>
+
+        <!-- Admin Tab -->
+        <div id="adminTab" class="tabPanel show">
+          <div class="formTitle">
+            <h2>👑 Admin Login</h2>
+            <span>Secure</span>
+          </div>
+
+          <label>Admin ID</label>
+          <input id="adminId" placeholder="admin" value="admin" />
+
+          <label>Password</label>
+          <input id="adminPass" type="password" placeholder="Enter admin password" />
+
+          <button class="btn primary" onclick="adminLogin()">Login as Admin</button>
+
+          <div class="small">
+            ✅ Only admin can add interns and assign tasks.
+          </div>
+        </div>
+
+        <!-- Intern Tab -->
+        <div id="internTab" class="tabPanel">
+          <div class="formTitle">
+            <h2>👨‍💻 Intern Login</h2>
+            <span>Task Submit</span>
+          </div>
+
+          <label>Intern ID</label>
+          <input id="internId" placeholder="INT0001" />
+
+          <label>Password</label>
+          <input id="internPass" type="password" placeholder="Enter password" />
+
+          <button class="btn primary" onclick="internLogin()">Login as Intern</button>
+
+          <div class="small">
+            ✅ First time? Password set karna padega.
+          </div>
+        </div>
+
+        <!-- Set Password Tab -->
+        <div id="passTab" class="tabPanel">
+          <div class="formTitle">
+            <h2>🔐 Set Password</h2>
+            <span>1 Time</span>
+          </div>
+
+          <label>Intern ID</label>
+          <input id="setInternId" placeholder="INT0001" />
+
+          <label>New Password</label>
+          <input id="newPass" type="password" placeholder="Create a strong password" />
+
+          <button class="btn" onclick="setPassword()">Set Password</button>
+
+          <div class="small">
+            ⚠️ Password ek hi baar set hoga. Dobara set nahi kar paoge.
+          </div>
+        </div>
+
+      </section>
+    </div>
+  </div>
+
+  <!-- Loader + Toast -->
+  <div id="loaderOverlay" class="loaderOverlay">
+    <div class="loaderCard">
+      <div class="spinner"></div>
+      <div id="loaderText">Loading...</div>
+    </div>
+  </div>
+  <div id="toast" class="toast"></div>
+
+  <script src="app.js"></script>
+
+  <script>
+    function openTab(tabId){
+      document.querySelectorAll(".tabBtn").forEach(b=>b.classList.remove("active"));
+
+      const btns = document.querySelectorAll(".tabBtn");
+      if(tabId==="adminTab") btns[0].classList.add("active");
+      if(tabId==="internTab") btns[1].classList.add("active");
+      if(tabId==="passTab") btns[2].classList.add("active");
+
+      document.querySelectorAll(".tabPanel").forEach(p=>p.classList.remove("show"));
+      document.getElementById(tabId).classList.add("show");
+    }
+
+    async function adminLogin(){
+      showLoader(true,"Checking Admin...");
+      const adminId = document.getElementById("adminId").value.trim();
+      const adminPass = document.getElementById("adminPass").value.trim();
+
+      const data = await apiPOST({action:"adminLogin", adminId, adminPass});
+      showLoader(false);
+
+      if(data.success){
+        saveSession("admin", {adminId, adminPass});
+        toast("Admin Login ✅","success");
+        setTimeout(()=> window.location.href="admin.html", 600);
+      }else{
+        toast(data.message,"error");
+      }
+    }
+
+    async function internLogin(){
+      showLoader(true,"Checking Intern...");
+      const internId = document.getElementById("internId").value.trim();
+      const password = document.getElementById("internPass").value.trim();
+
+      const data = await apiPOST({action:"internLogin", internId, password});
+      showLoader(false);
+
+      if(data.success){
+        saveSession("intern", data.intern);
+        toast("Intern Login ✅","success");
+        setTimeout(()=> window.location.href="intern.html", 600);
+      }else{
+        toast(data.message,"error");
+      }
+    }
+
+    async function setPassword(){
+      showLoader(true,"Setting Password...");
+      const internId = document.getElementById("setInternId").value.trim();
+      const newPassword = document.getElementById("newPass").value.trim();
+
+      const data = await apiPOST({action:"internSetPassword", internId, newPassword});
+      showLoader(false);
+
+      if(data.success){
+        toast("Password Set ✅ Now login","success");
+        openTab("internTab");
+      }else{
+        toast(data.message,"error");
+      }
+    }
+
+    // ✅ Auto open Set Password via link (optional, safe)
+    (function autoOpenSetPass(){
+      const hash = window.location.hash || "";
+      if(hash.startsWith("#setpass")){
+        const params = new URLSearchParams(hash.split("?")[1] || "");
+        const internId = params.get("internId");
+        if(internId){
+          document.getElementById("setInternId").value = internId;
+          openTab("passTab");
+          toast("Set your password ✅","success");
+        }
+      }
+    })();
+  </script>
+</body>
+</html>
