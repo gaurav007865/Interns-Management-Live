@@ -862,7 +862,7 @@ function startAutoRefreshAdmin(){
     const activePage = document.querySelector(".pageSection.active")?.id || "";
 
     if(activePage === "studentsPage") await loadInterns(true);
-    if(activePage === "subsPage") await loadSubmissions(true);
+    // if(activePage === "subsPage") await loadSubmissions(true);
     if(activePage === "incompletePage") await loadIncomplete(true);
 
     if(document.getElementById("chatModal")?.classList.contains("show")){
