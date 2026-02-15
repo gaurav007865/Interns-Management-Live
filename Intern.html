@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="UTF-8" />
   <title>Intern Panel</title>
@@ -7,34 +8,148 @@
 
   <style>
     /* ✅ Section Switch */
-    .pageSection{ display:none; }
-    .pageSection.active{ display:block; }
-
-    .miniGrid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:18px;
+    .pageSection {
+      display: none;
     }
 
-    .progressBar{
-      width:100%;
-      height:14px;
-      border-radius:999px;
-      background: rgba(255,255,255,0.08);
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,0.10);
-      margin-top:10px;
+    .pageSection.active {
+      display: block;
     }
-    .progressFill{
-      height:100%;
-      width:0%;
+
+    .miniGrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .progressBar {
+      width: 100%;
+      height: 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      margin-top: 10px;
+    }
+
+    .progressFill {
+      height: 100%;
+      width: 0%;
       background: linear-gradient(135deg, var(--p1), var(--p3));
-      box-shadow: 0 0 25px rgba(124,0,255,0.25);
+      box-shadow: 0 0 25px rgba(124, 0, 255, 0.25);
       transition: 0.4s;
     }
-            
-    @media(max-width:1000px){
-      .miniGrid{ grid-template-columns:1fr; }
+
+    .tableWrap table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .tableWrap th {
+      text-align: left;
+      padding: 12px 10px;
+      background: rgba(255, 255, 255, 0.05);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .tableWrap td {
+      padding: 14px 10px;
+      vertical-align: middle;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .tableWrap tr:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .tableWrap td b {
+      font-weight: 600;
+    }
+
+    .tableWrap td .btn {
+      margin-top: 6px;
+      display: inline-block;
+    }
+
+    .tableWrap td a {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 13px;
+      text-decoration: none;
+      color: #8c7dff;
+    }
+
+    .tableWrap td a:hover {
+      text-decoration: underline;
+    }
+
+    .tableWrap th:nth-child(1),
+    .tableWrap td:nth-child(1) {
+      width: 15%;
+    }
+
+    .tableWrap th:nth-child(2),
+    .tableWrap td:nth-child(2) {
+      width: 40%;
+    }
+
+    .tableWrap th:nth-child(3),
+    .tableWrap td:nth-child(3) {
+      width: 20%;
+    }
+
+    .tableWrap th:nth-child(4),
+    .tableWrap td:nth-child(4) {
+      width: 25%;
+    }
+    .achievementCard {
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: 0.3s;
+}
+
+.achievementCard:hover {
+  transform: scale(1.02);
+}
+
+.locked {
+  opacity: 0.4;
+}
+.heatmapGrid {
+  display: grid;
+  grid-template-columns: repeat(18, 1fr);
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.heatCell {
+  height: 22px;
+  border-radius: 6px;
+  background: #1e1e1e;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.heatCell:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 10px rgba(57,211,83,0.6);
+}
+
+.level4 {
+  background: #39d353;
+}
+
+    @media(max-width:1000px) {
+      .miniGrid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -63,15 +178,14 @@
           <a class="active" href="javascript:void(0)" onclick="switchPage('todayPage', this)">📌 Today’s Task</a>
           <a href="javascript:void(0)" onclick="switchPage('historyPage', this)">📚 Task History</a>
           <a href="javascript:void(0)" onclick="switchPage('submitPage', this)">📤 Submit Task</a>
-          <a href="javascript:void(0)" onclick="switchPage('progressPage', this)">📊 Progress</a>
-          <a href="javascript:void(0)" onclick="switchPage('streakPage', this)">🔥 Streak</a>
+          <a href="javascript:void(0)" onclick="switchPage('performancePage', this)">🏆 Performance</a>
           <a href="javascript:void(0)" onclick="switchPage('messagesPage', this)">💬 Messages</a>
           <a href="javascript:void(0)" onclick="switchPage('profilePage', this)">👤 Profile</a>
         </div>
 
         <div class="sideFooter">
-          ✅ Submit GitHub/Deploy link<br/>
-          ✅ Grade by Admin<br/>
+          ✅ Submit GitHub/Deploy link<br />
+          ✅ Grade by Admin<br />
           ✅ Full History Safe
         </div>
       </aside>
@@ -175,87 +289,69 @@
           <button class="btn" onclick="editSubmission()">Edit Submission</button>
         </section>
 
-        <!-- ✅ 4) PROGRESS -->
-        <section class="card pageSection" id="progressPage">
+        
+        <section class="card pageSection" id="performancePage">
           <div class="cardHead">
             <div>
-              <h2>📊 Progress</h2>
-              <span>Grades based</span>
+              <h2>🏆 Performance Dashboard</h2>
+              <span>6 Month Based Achievements</span>
             </div>
           </div>
 
           <div class="miniGrid">
-            <div>
-              <div class="small">Overall Score</div>
-              <h2 style="margin-top:8px;"><span id="progressPercent">0</span>%</h2>
 
-              <div class="progressBar">
-                <div class="progressFill" id="progressFill"></div>
-              </div>
+            <!-- LEFT SIDE -->
+            <div>
+              <h3>🎮 Achievements</h3>
+              <div id="achievementBox"></div>
             </div>
 
+            <!-- RIGHT SIDE -->
             <div>
-              <div class="small">Grade rules</div>
-              <div class="small" style="margin-top:10px;">
-                ✅ A+ = 100%<br/>
-                ✅ A = 90%<br/>
-                ✅ B = 75%<br/>
-                ✅ C = 55%<br/>
-                ✅ 0-10 = x10 score
-              </div>
+              <h3>📅 Activity Map</h3>
+              <div id="heatmap" class="heatmapGrid"></div>
             </div>
+
           </div>
         </section>
 
-        <!-- ✅ 5) STREAK -->
-        <section class="card pageSection" id="streakPage">
-          <div class="cardHead">
-            <div>
-              <h2>🔥 Streak</h2>
-              <span>Daily submissions</span>
-            </div>
-          </div>
-
-          <h2 style="margin-top:4px;">🔥 <span id="streakCount">0</span> days</h2>
-          <div class="small">✅ Streak = Number of days of continuous submission.</div>
-        </section>
 
 
 
         <!-- ✅ 6) MESSAGES -->
-<section class="card pageSection" id="messagesPage">
-  <div class="cardHead">
-    <div>
-      <h2>💬 Messages</h2>
-      <span>Admin ↔ Intern </span>
-    </div>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;">
-      <button class="btn" onclick="loadMyChat()">🔄 Refresh</button>
-      <button class="btn danger" onclick="internClearChat()">🧹 Clear Chat</button>
-    </div>
-  </div>
+        <section class="card pageSection" id="messagesPage">
+          <div class="cardHead">
+            <div>
+              <h2>💬 Messages</h2>
+              <span>Admin ↔ Intern </span>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <button class="btn" onclick="loadMyChat()">🔄 Refresh</button>
+              <button class="btn danger" onclick="internClearChat()">🧹 Clear Chat</button>
+            </div>
+          </div>
 
-  <div class="tableWrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Sender</th>
-          <th>Message</th>
-          <th>Time</th>
-        </tr>
-      </thead>
-      <tbody id="internChatTable"></tbody>
-    </table>
-  </div>
+          <div class="tableWrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Sender</th>
+                  <th>Message</th>
+                  <th>Time</th>
+                </tr>
+              </thead>
+              <tbody id="internChatTable"></tbody>
+            </table>
+          </div>
 
-  <label style="margin-top:12px;">Send Message to Admin</label>
-  <input id="internChatMsg" placeholder="Type message..." />
-  <button class="btn primary" onclick="internSendMsg()">Send</button>
+          <label style="margin-top:12px;">Send Message to Admin</label>
+          <input id="internChatMsg" placeholder="Type message..." />
+          <button class="btn primary" onclick="internSendMsg()">Send</button>
 
-  <div class="small">
-    ✅ The message will be automatically deleted within 48 hours.
-  </div>
-</section>
+          <div class="small">
+            ✅ The message will be automatically deleted within 48 hours.
+          </div>
+        </section>
 
 
         <!-- ✅ 7) PROFILE -->
@@ -276,6 +372,18 @@
           <button class="btn primary" onclick="changePassword()">Change Password</button>
         </section>
 
+        <div id="taskModal" class="modalOverlay">
+          <div class="modalCard">
+            <div style="display:flex;justify-content:space-between;">
+              <h3 id="modalTaskTitle"></h3>
+              <button class="btn danger" onclick="closeTaskModal()">Close</button>
+            </div>
+
+            <div style="margin-top:12px;color:var(--muted);" id="modalTaskDesc"></div>
+          </div>
+        </div>
+
+
       </main>
     </div>
   </div>
@@ -294,117 +402,246 @@
   <script>
 
 
-const visitedInternPages = {
-  todayPage:false,
-  historyPage:false,
-  submitPage:false,
-  progressPage:false,
-  streakPage:false,
-  messagesPage:false,
-  profilePage:false
-};
+    const visitedInternPages = {
+      todayPage: false,
+      historyPage: false,
+      submitPage: false,
+      progressPage: false,
+      streakPage: false,
+      messagesPage: false,
+      profilePage: false
+    };
 
 
     const intern = getSession("intern");
-    if(!intern) window.location.href="index.html";
+    if (!intern) window.location.href = "index.html";
 
     document.getElementById("internPill").innerText = intern.InternID;
     document.getElementById("internInfo").innerText =
       `Welcome, ${intern.Name} • Batch: ${intern.Batch} • Duration: ${intern.Duration}`;
 
     // ✅ Switch page
-    function switchPage(pageId, navEl){
-      document.querySelectorAll(".pageSection").forEach(s=>s.classList.remove("active"));
-      document.getElementById(pageId).classList.add("active");
+    async function switchPage(pageId, navEl) {
 
-      document.querySelectorAll("#internNav a").forEach(a=>a.classList.remove("active"));
+      document.querySelectorAll(".pageSection")
+        .forEach(s => s.classList.remove("active"));
+
+      document.getElementById(pageId)
+        .classList.add("active");
+
+      document.querySelectorAll("#internNav a")
+        .forEach(a => a.classList.remove("active"));
+
       navEl.classList.add("active");
+
+      // 🔥 IMPORTANT: Reload tasks when needed
+
+      if (pageId === "todayPage") {
+        await loadToday();
+      }
+
+      if (pageId === "submitPage") {
+        await loadToday();  // <-- THIS FIXES DROPDOWN
+      }
+
+      if (pageId === "historyPage") {
+        await loadHistory();
+      }
+      if(pageId === "performancePage") {
+    await loadPerformance();
+      }
+
     }
 
-    function pill(status){
-      const s = (status||"").toLowerCase();
-      if(s.includes("approved")) return `<span class="pill ok">${status}</span>`;
-      if(s.includes("rejected")) return `<span class="pill bad">${status}</span>`;
-      if(s.includes("submitted") || s.includes("pending")) return `<span class="pill warn">${status}</span>`;
-      return `<span class="pill">${status||"-"}</span>`;
+
+    function pill(status) {
+      const s = (status || "").toLowerCase();
+      if (s.includes("approved")) return `<span class="pill ok">${status}</span>`;
+      if (s.includes("rejected")) return `<span class="pill bad">${status}</span>`;
+      if (s.includes("submitted") || s.includes("pending")) return `<span class="pill warn">${status}</span>`;
+      return `<span class="pill">${status || "-"}</span>`;
     }
 
-    async function loadToday(silent=false){
-      showLoader(true,"Loading Today...", silent);
-      const data = await apiGET({action:"getInternToday", internId: intern.InternID});
-      showLoader(false,"", silent);
+    async function loadToday(silent = false) {
 
-      if(!data.success){ toast(data.message,"error"); return; }
+      showLoader(true, "Loading Pending Tasks...", silent);
 
-      document.getElementById("todayMeta").innerText = `Date: ${data.today}`;
+      const data = await apiGET({
+        action: "getInternPendingTasks",
+        internId: intern.InternID
+      });
 
+      showLoader(false, "", silent);
+
+      if (!data.success) {
+        toast(data.message, "error");
+        return;
+      }
+
+      const tasks = data.tasks || [];
+
+      // 🔥 Meta Text
+      document.getElementById("todayMeta").innerText =
+        "All Pending Tasks (Old + Today)";
+
+      // ===============================
+      // ✅ TABLE RENDER
+      // ===============================
       const tb = document.getElementById("todayTable");
       tb.innerHTML = "";
 
-      if((data.tasks||[]).length === 0){
-        tb.innerHTML = `<tr><td colspan="3">No task assigned today ✅</td></tr>`;
-      }else{
-        data.tasks.forEach(t=>{
-          tb.innerHTML += `
-            <tr>
-              <td><b>${t.AssignedTaskID}</b></td>
-              <td>
-                <b>${t.Title}</b><br/>
-                <span style="color:var(--muted);font-size:12px;">${t.Description}</span>
-              </td>
-              <td>${pill(t.Status)}</td>
-            </tr>
-          `;
-        });
+      if (tasks.length === 0) {
+        tb.innerHTML = `
+      <tr>
+        <td colspan="3">No pending tasks ✅</td>
+      </tr>
+    `;
+      } else {
+
+        tasks.forEach(t => {
+
+  const safeTitle = (t.Title || "").replace(/'/g, "");
+  const safeDesc  = (t.Description || "").replace(/'/g, "");
+  const link      = t.SubmissionLink || "";
+
+  tb.innerHTML += `
+    <tr>
+      <td><b>${t.AssignedTaskID}</b></td>
+
+      <td>
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <div style="font-weight:600;">${safeTitle}</div>
+
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+
+            <button class="btn ghost"
+              onclick="openTaskModal('${t.AssignedTaskID}','${safeTitle}','${safeDesc}')">
+              🔘 Open
+            </button>
+
+            ${link ? `
+              <a href="${link}" target="_blank" class="btn ghost">
+                🔗 Open Submission
+              </a>
+            ` : ""}
+
+          </div>
+        </div>
+      </td>
+
+      <td>${pill(t.Status || "Pending")}</td>
+    </tr>
+  `;
+});
+
       }
 
-      // ✅ Submit dropdown auto
+      // ===============================
+      // ✅ SUBMIT DROPDOWN RENDER
+      // ===============================
       const sel = document.getElementById("submitTaskSelect");
-      if((data.tasks||[]).length===0){
-        sel.innerHTML = `<option value="">No task today</option>`;
-      }else{
-        sel.innerHTML = data.tasks.map(t=>`<option value="${t.AssignedTaskID}">${t.Title} (${t.AssignedTaskID})</option>`).join("");
+
+      if (tasks.length === 0) {
+
+        sel.innerHTML = `
+      <option value="">No pending task</option>
+    `;
+
+      } else {
+
+        sel.innerHTML = `
+      <option value="">Select Pending Task</option>
+      ${tasks.map(t => `
+        <option value="${t.AssignedTaskID}">
+          ${t.Title} (${t.AssignedTaskID})
+        </option>
+      `).join("")}
+    `;
       }
     }
 
-    async function loadHistory(silent=false){
-      showLoader(true,"Loading History...", silent);
-      const data = await apiGET({action:"getInternHistory", internId: intern.InternID});
-      showLoader(false,"", silent);
 
-      if(!data.success){ toast(data.message,"error"); return; }
+    function openTaskModal(id, title, desc) {
+      document.getElementById("modalTaskTitle").innerText =
+        id + " - " + title;
+
+      document.getElementById("modalTaskDesc").innerText =
+        desc || "No Description";
+
+      document.getElementById("taskModal")
+        .classList.add("show");
+    }
+
+    function closeTaskModal() {
+      document.getElementById("taskModal")
+        .classList.remove("show");
+    }
+
+
+    async function loadHistory(silent = false) {
+      showLoader(true, "Loading History...", silent);
+      const data = await apiGET({ action: "getInternHistory", internId: intern.InternID });
+      showLoader(false, "", silent);
+
+      if (!data.success) { toast(data.message, "error"); return; }
 
       const tb = document.getElementById("historyTable");
       tb.innerHTML = "";
 
-      if((data.history||[]).length===0){
+      if ((data.history || []).length === 0) {
         tb.innerHTML = `<tr><td colspan="4">No history ✅</td></tr>`;
         return;
       }
+      data.history.slice(0, 50).forEach(h => {
 
-      data.history.slice(0,50).forEach(h=>{
+        const safeTitle = (h.Title || "").replace(/`/g, "");
+        const safeDesc = (h.Description || "").replace(/`/g, "");
+        const link = h.SubmissionLink || "";
+
         tb.innerHTML += `
-          <tr>
-            <td>${h.Date}</td>
-            <td>${h.Title}</td>
-            <td>${pill(h.Status)}</td>
-            <td><b>${h.Grade || "Not Seen"}</b></td>
-          </tr>
-        `;
+    <tr>
+      <td>${h.Date || "-"}</td>
+
+      <td>
+        <b>${safeTitle}</b><br/>
+
+        <button class="btn ghost"
+          onclick="openTaskModal(
+            '${h.AssignedTaskID || ""}',
+            \`${safeTitle}\`,
+            \`${safeDesc}\`
+          )">
+          🔘 Open
+        </button>
+
+        ${link ? `
+          <br/>
+          <a href="${link}" target="_blank" class="btn ghost" style="margin-top:6px;">
+            🔗 Open Submission
+          </a>
+        ` : ""}
+      </td>
+
+      <td>${pill(h.Status || "Pending")}</td>
+
+      <td><b>${h.Grade || "Not Seen"}</b></td>
+    </tr>
+  `;
       });
+
     }
 
-    async function submitTask(){
+    async function submitTask() {
       const assignedTaskId = document.getElementById("submitTaskSelect").value;
       const link = document.getElementById("submitLink").value.trim();
       const details = document.getElementById("submitDetails").value.trim();
 
-      if(!assignedTaskId){ toast("Select task first ❌","error"); return; }
-      if(!link){ toast("Submission link required ❌","error"); return; }
+      if (!assignedTaskId) { toast("Select task first ❌", "error"); return; }
+      if (!link) { toast("Submission link required ❌", "error"); return; }
 
-      showLoader(true,"Submitting...");
+      showLoader(true, "Submitting...");
       const data = await apiPOST({
-        action:"internSubmitTask",
+        action: "internSubmitTask",
         internId: intern.InternID,
         assignedTaskId,
         link,
@@ -412,26 +649,26 @@ const visitedInternPages = {
       });
       showLoader(false);
 
-      if(data.success){
-        toast("Submitted ✅","success");
+      if (data.success) {
+        toast("Submitted ✅", "success");
         document.getElementById("editSubmissionId").value = data.submissionId;
         loadToday();
         loadHistory();
         loadProgress();
         loadStreak();
-      }else toast(data.message,"error");
+      } else toast(data.message, "error");
     }
 
-    async function editSubmission(){
+    async function editSubmission() {
       const submissionId = document.getElementById("editSubmissionId").value.trim();
       const link = document.getElementById("submitLink").value.trim();
       const details = document.getElementById("submitDetails").value.trim();
 
-      if(!submissionId){ toast("SubmissionID required ❌","error"); return; }
+      if (!submissionId) { toast("SubmissionID required ❌", "error"); return; }
 
-      showLoader(true,"Editing (5 min rule)...");
+      showLoader(true, "Editing (5 min rule)...");
       const data = await apiPOST({
-        action:"internEditSubmission",
+        action: "internEditSubmission",
         internId: intern.InternID,
         submissionId,
         link,
@@ -439,175 +676,331 @@ const visitedInternPages = {
       });
       showLoader(false);
 
-      if(data.success){
-        toast("Edited ✅","success");
+      if (data.success) {
+        toast("Edited ✅", "success");
         loadHistory();
-      }else toast(data.message,"error");
+      } else toast(data.message, "error");
     }
 
-    async function loadProgress(silent=false){
-      const data = await apiGET({action:"getInternProgress", internId: intern.InternID});
-      if(!data.success) return;
+    async function loadProgress(silent = false) {
+      const data = await apiGET({ action: "getInternPerformance", internId: intern.InternID });
+      if (!data.success) return;
 
       const percent = data.percent || 0;
       document.getElementById("progressPercent").innerText = percent;
       document.getElementById("progressFill").style.width = percent + "%";
     }
 
-    async function loadStreak(silent=false){
-      const data = await apiGET({action:"getInternStreak", internId: intern.InternID});
-      if(!data.success) return;
+    async function loadStreak(silent = false) {
+      const data = await apiGET({ action: "getInternStreak", internId: intern.InternID });
+      if (!data.success) return;
       document.getElementById("streakCount").innerText = data.streak || 0;
     }
 
-    async function changePassword(){
+    async function changePassword() {
       const oldPassword = document.getElementById("oldPass").value.trim();
       const newPassword = document.getElementById("newPass").value.trim();
 
-      if(!oldPassword || !newPassword){
-        toast("Fill both passwords ❌","error"); return;
+      if (!oldPassword || !newPassword) {
+        toast("Fill both passwords ❌", "error"); return;
       }
 
-      showLoader(true,"Changing Password...");
+      showLoader(true, "Changing Password...");
       const data = await apiPOST({
-        action:"internChangePassword",
+        action: "internChangePassword",
         internId: intern.InternID,
         oldPassword,
         newPassword
       });
       showLoader(false);
 
-      if(data.success){
-        toast("Password Changed ✅","success");
-        document.getElementById("oldPass").value="";
-        document.getElementById("newPass").value="";
-      }else toast(data.message,"error");
+      if (data.success) {
+        toast("Password Changed ✅", "success");
+        document.getElementById("oldPass").value = "";
+        document.getElementById("newPass").value = "";
+      } else toast(data.message, "error");
     }
 
-    async function init(){
+    async function init() {
       await loadToday();
       await loadHistory();
-      await loadProgress();
-      await loadStreak();
       await loadMyChat();
+      await loadPerformance();
+      
+
 
     }
 
 
-    async function loadMyChat(silent=false){
-  showLoader(true,"Loading Messages...", silent);
-  const data = await apiGET({
-    action:"internGetChat",
-    internId: intern.InternID
-  });
-  showLoader(false,"", silent);
+    async function loadMyChat(silent = false) {
+      showLoader(true, "Loading Messages...", silent);
+      const data = await apiGET({
+        action: "internGetChat",
+        internId: intern.InternID
+      });
+      showLoader(false, "", silent);
 
-  const tb = document.getElementById("internChatTable");
-  tb.innerHTML = "";
+      const tb = document.getElementById("internChatTable");
+      tb.innerHTML = "";
 
-  if(!data.success){
-    tb.innerHTML = `<tr><td colspan="3">${data.message}</td></tr>`;
-    return;
-  }
+      if (!data.success) {
+        tb.innerHTML = `<tr><td colspan="3">${data.message}</td></tr>`;
+        return;
+      }
 
-  if((data.messages||[]).length===0){
-    tb.innerHTML = `<tr><td colspan="3">No messages ✅</td></tr>`;
-    return;
-  }
+      if ((data.messages || []).length === 0) {
+        tb.innerHTML = `<tr><td colspan="3">No messages ✅</td></tr>`;
+        return;
+      }
 
-  data.messages.forEach(m=>{
-    tb.innerHTML += `
+      data.messages.forEach(m => {
+        tb.innerHTML += `
       <tr>
         <td><b>${m.Sender}</b></td>
         <td>${m.Message}</td>
         <td>${m.CreatedAt}</td>
       </tr>
     `;
-  });
-}
+      });
+    }
 
-async function internSendMsg(){
-  const message = document.getElementById("internChatMsg").value.trim();
-  if(!message){ toast("Message empty ❌","error"); return; }
+    async function internSendMsg() {
+      const message = document.getElementById("internChatMsg").value.trim();
+      if (!message) { toast("Message empty ❌", "error"); return; }
 
-  showLoader(true,"Sending...");
+      showLoader(true, "Sending...");
+      const data = await apiGET({
+        action: "sendMessageGET",
+        internId: intern.InternID,
+        sender: "Intern",
+        message
+      });
+      showLoader(false);
+
+      if (data.success) {
+        toast("Sent ✅", "success");
+        document.getElementById("internChatMsg").value = "";
+        loadMyChat();
+      } else toast(data.message, "error");
+    }
+
+
+    async function internClearChat() {
+      showLoader(true, "Clearing Chat...");
+      const data = await apiGET({
+        action: "clearChatGET",
+        internId: intern.InternID,
+        by: "Intern"
+      });
+      showLoader(false);
+
+      if (data.success) {
+        toast("Chat cleared ✅", "success");
+        loadMyChat();
+      } else toast(data.message, "error");
+    }
+
+    let INTERN_AUTO_TIMER = null;
+
+    function startAutoRefreshIntern() {
+      if (INTERN_AUTO_TIMER) clearInterval(INTERN_AUTO_TIMER);
+
+      INTERN_AUTO_TIMER = setInterval(async () => {
+        if (document.hidden) return;
+
+        const activePage = document.querySelector(".pageSection.active")?.id || "";
+
+        if (activePage === "todayPage") await loadToday(true);
+        if (activePage === "historyPage") await loadHistory(true);
+        if (activePage === "messagesPage") await loadMyChat(true);
+        
+
+      }, 5000);
+    }
+
+    async function loadInterns(silent = false) {
+      showLoader(true, "Loading Students...", silent);
+
+      const batchId = document.getElementById("filterBatch").value;
+      const sort = document.getElementById("sortType").value;
+
+      const data = await apiGET({
+        action: "getInternsList",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        batchId,
+        sort
+      });
+
+      showLoader(false, "", silent);
+
+      if (!data.success) {
+        if (!silent) toast(data.message, "error"); // ✅ silent me toast bhi nahi
+        return;
+      }
+
+      // ✅ update UI normally (no loader)
+      const tb = document.getElementById("internTable");
+      tb.innerHTML = "";
+
+    }
+
+    async function loadPerformance(){
+
   const data = await apiGET({
-    action:"sendMessageGET",
-    internId: intern.InternID,
-    sender:"Intern",
-    message
+    action: "getInternPerformance",
+    internId: intern.InternID
   });
-  showLoader(false);
 
-  if(data.success){
-    toast("Sent ✅","success");
-    document.getElementById("internChatMsg").value = "";
-    loadMyChat();
-  }else toast(data.message,"error");
+  if(!data.success) return;
+
+  renderAchievements(
+    data.percent,
+    data.submissionCount
+  );
+
+  renderHeatmap(
+    data.activityMap,
+    data.createdAt,
+    data.highestStreak
+  );
 }
 
 
-async function internClearChat(){
-  showLoader(true,"Clearing Chat...");
-  const data = await apiGET({
-    action:"clearChatGET",
-    internId: intern.InternID,
-    by:"Intern"
-  });
-  showLoader(false);
 
-  if(data.success){
-    toast("Chat cleared ✅","success");
-    loadMyChat();
-  }else toast(data.message,"error");
-}
 
-let INTERN_AUTO_TIMER = null;
 
-function startAutoRefreshIntern(){
-  if(INTERN_AUTO_TIMER) clearInterval(INTERN_AUTO_TIMER);
 
-  INTERN_AUTO_TIMER = setInterval(async ()=>{
-    if(document.hidden) return;
+function renderAchievements(percent, totalApproved){
 
-    const activePage = document.querySelector(".pageSection.active")?.id || "";
+  totalApproved = parseInt(totalApproved);
+  if (isNaN(totalApproved)) totalApproved = 0;
 
-    if(activePage === "todayPage") await loadToday(true);
-    if(activePage === "historyPage") await loadHistory(true);
-    if(activePage === "progressPage") await loadProgress(true);
-    if(activePage === "streakPage") await loadStreak(true);
-    if(activePage === "messagesPage") await loadMyChat(true);
+  const levels = [
+    { name: "🥉 Bronze", minSub: 4 },
+    { name: "🥈 Silver", minSub: 8 },
+    { name: "🥇 Gold", minSub: 12 },
+    { name: "💎 Platinum", minSub: 16 },
+    { name: "🔷 Diamond", minSub: 20 },
+    { name: "👑 Master", minSub: 30 }
+  ];
 
-  }, 5000);
-}
+  const box = document.getElementById("achievementBox");
+  box.innerHTML = "";
 
-async function loadInterns(silent=false){
-  showLoader(true,"Loading Students...", silent);
+  levels.forEach(level => {
 
-  const batchId = document.getElementById("filterBatch").value;
-  const sort = document.getElementById("sortType").value;
+    const unlocked = totalApproved >= level.minSub;
+    const remaining = Math.max(level.minSub - totalApproved, 0);
 
-  const data = await apiGET({
-    action:"getInternsList",
-    adminId: admin.adminId,
-    adminPass: admin.adminPass,
-    batchId,
-    sort
+    box.innerHTML += `
+      <div class="achievementCard ${unlocked ? "" : "locked"}">
+        <div>
+          <div style="font-weight:600;">${level.name}</div>
+          <div style="font-size:12px;">
+            ${unlocked 
+              ? "Unlocked ✅"
+              : `Need ${remaining} more submissions`
+            }
+          </div>
+        </div>
+        <div style="font-weight:600;">
+          ${totalApproved}/${level.minSub}
+        </div>
+      </div>
+    `;
   });
 
-  showLoader(false,"", silent);
+  box.innerHTML += `
+    <div style="
+        margin-top:15px;
+        padding:12px;
+        border-radius:10px;
+        background:rgba(255,255,255,0.05);
+        font-size:14px;
+    ">
+      <div><b>Total Approved:</b> ${totalApproved}</div>
+      <div><b>Performance Score:</b> ${percent}%</div>
+    </div>
+  `;
+}
 
-  if(!data.success){
-    if(!silent) toast(data.message,"error"); // ✅ silent me toast bhi nahi
-    return;
+
+
+
+function renderHeatmap(activityMap, createdAt, highestStreak){
+
+  const grid = document.getElementById("heatmap");
+  grid.innerHTML = "";
+
+  if(!createdAt) return;
+
+  const startDate = new Date(createdAt);
+  if(isNaN(startDate)) return;
+
+  const today = new Date();
+  const totalDays = 180;
+
+  for(let i=0;i<totalDays;i++){
+
+    const d = new Date(startDate);
+    d.setDate(startDate.getDate() + i);
+
+    if(d > today) break;
+
+    const formatted = d.getFullYear() + "-" +
+      String(d.getMonth()+1).padStart(2,"0") + "-" +
+      String(d.getDate()).padStart(2,"0");
+
+    const dayLabel = d.toLocaleDateString("en-US", {
+      weekday:"long",
+      year:"numeric",
+      month:"long",
+      day:"numeric"
+    });
+
+    let className = "heatCell";
+    let clickHandler = "";
+
+    if(activityMap[formatted]){
+      className += " level4";
+      const tasks = JSON.stringify(activityMap[formatted]);
+      clickHandler = `onclick='openDayTasks(${tasks})'`;
+    }
+
+    grid.innerHTML += `
+      <div class="${className}" ${clickHandler}
+           title="${dayLabel}">
+      </div>
+    `;
   }
 
-  // ✅ update UI normally (no loader)
-  const tb = document.getElementById("internTable");
-  tb.innerHTML = "";
-  
+  grid.innerHTML += `
+    <div style="grid-column: span 18; margin-top:15px;">
+      🔥 Highest Streak: <b>${highestStreak} days</b>
+    </div>
+  `;
 }
 
+
+function openDayTasks(tasks){
+
+  let content = "";
+
+  tasks.forEach(t => {
+    content += `
+      <div style="margin-bottom:10px;">
+        <b>${t.taskId}</b><br/>
+        ${t.link ? `<a href="${t.link}" target="_blank">Open Submission</a>` : ""}
+      </div>
+    `;
+  });
+
+  document.getElementById("modalTaskTitle").innerText = "Tasks Completed";
+  document.getElementById("modalTaskDesc").innerHTML = content;
+
+  document.getElementById("taskModal").classList.add("show");
+}
 
 
     init();
@@ -615,4 +1008,5 @@ async function loadInterns(silent=false){
 
   </script>
 </body>
+
 </html>
