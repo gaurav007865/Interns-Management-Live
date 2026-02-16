@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="UTF-8" />
   <title>Admin Panel</title>
@@ -7,70 +8,138 @@
 
   <style>
     /* ✅ Section Switch */
-    .pageSection{ display:none; }
-    .pageSection.active{ display:block; }
+    .pageSection {
+      display: none;
+    }
+
+    .pageSection.active {
+      display: block;
+    }
 
     /* ✅ small top heading inside each page */
-    .pageTop{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      margin-bottom:14px;
+    .pageTop {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
     }
-    .pageTop h2{
-      font-size:16px;
-      font-weight:900;
-      letter-spacing:0.4px;
+
+    .pageTop h2 {
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: 0.4px;
     }
-    .pageTop p{
-      color:var(--muted);
-      font-size:12px;
-      margin-top:6px;
-      line-height:1.4;
+
+    .pageTop p {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 6px;
+      line-height: 1.4;
     }
 
     /* ✅ 3 dot button */
-    .dotBtn{
-      padding:8px 12px;
-      border-radius:14px;
-      font-weight:900;
-      border:1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.03);
+    .dotBtn {
+      padding: 8px 12px;
+      border-radius: 14px;
+      font-weight: 900;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      background: rgba(255, 255, 255, 0.03);
       color: var(--text);
-      cursor:pointer;
+      cursor: pointer;
     }
-    .dotBtn:hover{
-      background: rgba(255,255,255,0.06);
-      box-shadow: 0 0 25px rgba(124,0,255,0.12);
+
+    .dotBtn:hover {
+      background: rgba(255, 255, 255, 0.06);
+      box-shadow: 0 0 25px rgba(124, 0, 255, 0.12);
       transform: translateY(-1px);
-      transition:0.2s;
+      transition: 0.2s;
     }
 
     /* ✅ Modal */
-    .modalOverlay{
-      position:fixed;
-      inset:0;
-      background: rgba(0,0,0,0.65);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      z-index:9999;
-      padding:16px;
+    .modalOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 16px;
     }
-    .modalOverlay.show{ display:flex; }
-    .modalCard{
-      width:min(1150px, 96vw);
+
+    .modalOverlay.show {
+      display: flex;
+    }
+
+    .modalCard {
+      width: min(1150px, 96vw);
       max-height: 90vh;
-      overflow:auto;
+      overflow: auto;
       border-radius: 22px;
-      border:1px solid rgba(124,0,255,0.25);
-      background: rgba(10,8,18,0.96);
+      border: 1px solid rgba(124, 0, 255, 0.25);
+      background: rgba(10, 8, 18, 0.96);
       box-shadow: var(--shadow);
-      padding:16px;
+      padding: 16px;
     }
+
+    .card canvas {
+      max-height: 220px;
+    }
+    /* ===============================
+   Intern Hover Tooltip
+================================ */
+
+.internCell{
+  position: relative;
+  cursor: pointer;
+}
+
+.internTooltip{
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) scale(0.9);
+  
+  background: linear-gradient(135deg, #7C00FF, #B100FF);
+  color: #fff;
+  
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  
+  white-space: nowrap;
+  
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.25s;
+  
+  box-shadow: 0 8px 25px rgba(124,0,255,0.35);
+  z-index: 100;
+}
+
+/* arrow */
+.internTooltip::after{
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  
+  border-width: 6px;
+  border-style: solid;
+  border-color: #7C00FF transparent transparent transparent;
+}
+
+.internCell:hover .internTooltip{
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+
   </style>
 </head>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <body>
   <div class="container">
@@ -100,13 +169,15 @@
           <a href="javascript:void(0)" onclick="switchPage('assignPage', this)">📌 Assign Task</a>
           <a href="javascript:void(0)" onclick="switchPage('subsPage', this)">✅ Submissions</a>
           <a href="javascript:void(0)" onclick="switchPage('incompletePage', this)">⚠️ Incomplete</a>
+          <a href="javascript:void(0)" onclick="switchPage('analyticsPage', this)">📊 Analytics</a>
+
 
         </div>
 
         <div class="sideFooter">
-          ✅ Max 20 interns per batch<br/>
-          ✅ Batch + Individual task<br/>
-          ✅ Grade + remarks<br/>
+          ✅ Max 20 interns per batch<br />
+          ✅ Batch + Individual task<br />
+          ✅ Grade + remarks<br />
           ✅ Full tracking
         </div>
 
@@ -206,7 +277,7 @@
               <div class="cardHead">
                 <div>
                   <h2>➕ Create Intern</h2>
-                  <span>Intern ID will  auto generate</span>
+                  <span>Intern ID will auto generate</span>
                 </div>
               </div>
 
@@ -309,74 +380,129 @@
         </section>
 
         <!-- ✅ PAGE: INCOMPLETE STUDENTS -->
-<section class="card pageSection" id="incompletePage">
-  <div class="pageTop">
-    <div>
-      <h2>⚠️ Incomplete Students</h2>
-      <p>Those who did not submit today's task</p>
-    </div>
-    <button class="btn" onclick="loadIncomplete()">🔄 Refresh</button>
-  </div>
+        <section class="card pageSection" id="incompletePage">
+          <div class="pageTop">
+            <div>
+              <h2>⚠️ Incomplete Students</h2>
+              <p>Those who did not submit today's task</p>
+            </div>
+            <button class="btn" onclick="loadIncomplete()">🔄 Refresh</button>
+          </div>
 
-  <label>Date</label>
-  <input id="incompleteDate" type="date" />
+          <label>Date</label>
+          <input id="incompleteDate" type="date" />
 
-  <button class="btn primary" onclick="loadIncomplete()">Load Incomplete</button>
+          <button class="btn primary" onclick="loadIncomplete()">Load Incomplete</button>
 
-  <div class="tableWrap" style="margin-top:12px;">
-    <table>
-      <thead>
-        <tr>
-          <th>InternID</th>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Batch</th>
-          <th>Pending</th>
-          <th>Message</th>
-        </tr>
-      </thead>
-      <tbody id="incompleteTable"></tbody>
-    </table>
-  </div>
+          <div class="tableWrap" style="margin-top:12px;">
+            <table>
+              <thead>
+                <tr>
+                  <th>InternID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Batch</th>
+                  <th>Pending</th>
+                  <th>Message</th>
+                </tr>
+              </thead>
+              <tbody id="incompleteTable"></tbody>
+            </table>
+          </div>
 
-  <div class="small">
-    ✅ The message will be auto deleted in 48 hours.
-  </div>
-</section>
+          <div class="small">
+            ✅ The message will be auto deleted in 48 hours.
+          </div>
+        </section>
+
+        <section class="card pageSection" id="analyticsPage">
+
+          <div class="pageTop">
+            <div>
+              <h2>📊 Analytics Dashboard</h2>
+              <p>System insights and performance</p>
+            </div>
+            <button class="btn" onclick="loadAnalytics()">🔄 Refresh</button>
+          </div>
+
+          <div class="kpis" style="grid-template-columns:repeat(7,1fr);">
+
+            <div class="kpi"><b id="kTotal">0</b><small>Total Interns</small></div>
+            <div class="kpi"><b id="kActive">0</b><small>Active</small></div>
+            <div class="kpi"><b id="kPending">0</b><small>Pending</small></div>
+            <div class="kpi"><b id="kApproved">0</b><small>Approved</small></div>
+            <div class="kpi"><b id="kPercent">0%</b><small>Approval %</small></div>
+
+            <!-- NEW -->
+            <div class="kpi"><b id="kAvg">0</b><small>Average Grade</small></div>
+            <div class="kpi"><b id="kDay">-</b><small>Most Active Day</small></div>
+
+          </div>
 
 
-<!-- ✅ CHAT MODAL (Admin ↔ Intern) -->
-<div id="chatModal" class="modalOverlay">
-  <div class="modalCard">
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
-      <div>
-        <div style="font-family:Orbitron,Inter;font-size:16px;font-weight:900;">💬 Chat</div>
-        <div style="color:var(--muted);font-size:12px;margin-top:6px;" id="chatMeta">Loading...</div>
-      </div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;">
-        <button class="btn" onclick="adminClearChat()">🧹 Clear Chat</button>
-        <button class="btn danger" onclick="closeChat()">Close</button>
-      </div>
-    </div>
+          <div class="grid2" style="margin-top:18px;">
 
-    <div class="tableWrap" style="margin-top:14px;">
-      <table>
-        <thead>
-          <tr>
-            <th>Sender</th>
-            <th>Message</th>
-            <th>Time</th>
-          </tr>
-        </thead>
-        <tbody id="chatTable"></tbody>
-      </table>
-    </div>
+            <div class="card">
+              <h3>Submission Status</h3>
+              <canvas id="statusChart" height="220"></canvas>
+            </div>
 
-    <label style="margin-top:12px;">Send Message</label>
-    <input id="chatMsg" placeholder="Write message..." />
-    <button class="btn primary" onclick="adminSendMsg()">Send</button>
-  </div>
-</div>
+            <div class="card">
+              <h3>Batch Performance %</h3>
+              <canvas id="batchChart" height="220"></canvas>
+
+            </div>
+
+            <!-- NEW -->
+            <div class="card">
+              <h3>Submission Trend</h3>
+              <canvas id="trendChart" height="220"></canvas>
+            </div>
+
+            <!-- NEW -->
+            <div class="card">
+              <h3>Top Interns</h3>
+              <div id="topInternsBox"></div>
+            </div>
+
+          </div>
+
+
+        </section>
+
+
+        <!-- ✅ CHAT MODAL (Admin ↔ Intern) -->
+        <div id="chatModal" class="modalOverlay">
+          <div class="modalCard">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+              <div>
+                <div style="font-family:Orbitron,Inter;font-size:16px;font-weight:900;">💬 Chat</div>
+                <div style="color:var(--muted);font-size:12px;margin-top:6px;" id="chatMeta">Loading...</div>
+              </div>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <button class="btn" onclick="adminClearChat()">🧹 Clear Chat</button>
+                <button class="btn danger" onclick="closeChat()">Close</button>
+              </div>
+            </div>
+
+            <div class="tableWrap" style="margin-top:14px;">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Sender</th>
+                    <th>Message</th>
+                    <th>Time</th>
+                  </tr>
+                </thead>
+                <tbody id="chatTable"></tbody>
+              </table>
+            </div>
+
+            <label style="margin-top:12px;">Send Message</label>
+            <input id="chatMsg" placeholder="Write message..." />
+            <button class="btn primary" onclick="adminSendMsg()">Send</button>
+          </div>
+        </div>
 
 
 
@@ -440,185 +566,192 @@
 
   <script>
 
-const visitedAdminPages = {
-  studentsPage: false,
-  batchPage: false,
-  assignPage: false,
-  subsPage: false,
-  incompletePage: false
-};
+    const visitedAdminPages = {
+      studentsPage: false,
+      batchPage: false,
+      assignPage: false,
+      subsPage: false,
+      incompletePage: false
+
+    };
 
 
     const admin = getSession("admin");
-    if(!admin) window.location.href="index.html";
+    if (!admin) window.location.href = "index.html";
 
     // ✅ Default date
-    document.getElementById("taskDate").value = new Date().toISOString().slice(0,10);
+    document.getElementById("taskDate").value = new Date().toISOString().slice(0, 10);
 
     // ✅ Switch Page Function
-   async function switchPage(pageId, navEl){
-  document.querySelectorAll(".pageSection").forEach(s=>s.classList.remove("active"));
-  document.getElementById(pageId).classList.add("active");
+    async function switchPage(pageId, navEl) {
+      document.querySelectorAll(".pageSection").forEach(s => s.classList.remove("active"));
+      document.getElementById(pageId).classList.add("active");
 
-  document.querySelectorAll("#adminNav a").forEach(a=>a.classList.remove("active"));
-  navEl.classList.add("active");
+      document.querySelectorAll("#adminNav a").forEach(a => a.classList.remove("active"));
+      navEl.classList.add("active");
 
-  // ✅ FIRST VISIT = loader ON, next = silent
-  const firstTime = !visitedAdminPages[pageId];
-  visitedAdminPages[pageId] = true;
+      // ✅ FIRST VISIT = loader ON, next = silent
+      const firstTime = !visitedAdminPages[pageId];
+      visitedAdminPages[pageId] = true;
 
-  // ✅ Load data based on section
-  if(pageId === "studentsPage") await loadInterns(!firstTime);
-  if(pageId === "subsPage") await loadSubmissions(!firstTime);
-  if(pageId === "incompletePage") await loadIncomplete(!firstTime);
+      // ✅ Load data based on section
+      if (pageId === "studentsPage") await loadInterns(!firstTime);
+      if (pageId === "subsPage") await loadSubmissions(!firstTime);
+      if (pageId === "incompletePage") await loadIncomplete(!firstTime);
 
-  // ✅ Batch page (optional)
-  if(pageId === "batchPage") await loadBatches(!firstTime);
+      // ✅ Batch page (optional)
+      if (pageId === "batchPage") await loadBatches(!firstTime);
 
-  // ✅ Assign page (optional - only batches reload)
-  if(pageId === "assignPage") await loadBatches(!firstTime);
-}
+      // ✅ Assign page (optional - only batches reload)
+      if (pageId === "assignPage") await loadBatches(!firstTime);
+      if (pageId === "analyticsPage") await loadAnalytics(!firstTime);
+
+    }
 
 
     // ✅ Init
-    async function init(){
+    async function init() {
       await loadBatches();
       await loadInterns();
       await loadSubmissions();
     }
 
-    async function loadBatches(silent=false){
-      showLoader(true,"Loading Batches...", silent);
+    async function loadBatches(silent = false) {
+      showLoader(true, "Loading Batches...", silent);
       const data = await apiGET({
-        action:"getBatches",
+        action: "getBatches",
         adminId: admin.adminId,
         adminPass: admin.adminPass
       });
-      showLoader(false,"", silent);
+      showLoader(false, "", silent);
 
-      if(!data.success){ toast(data.message,"error"); return; }
+      if (!data.success) { toast(data.message, "error"); return; }
 
       const list = data.batches || [];
 
       document.getElementById("filterBatch").innerHTML =
         `<option value="">All</option>` +
-        list.map(b=>`<option value="${b.BatchID}">${b.BatchName} (${b.BatchID})</option>`).join("");
+        list.map(b => `<option value="${b.BatchID}">${b.BatchName} (${b.BatchID})</option>`).join("");
 
       document.getElementById("inBatch").innerHTML =
-        list.map(b=>`<option value="${b.BatchID}">${b.BatchName} (${b.BatchID})</option>`).join("");
+        list.map(b => `<option value="${b.BatchID}">${b.BatchName} (${b.BatchID})</option>`).join("");
 
       document.getElementById("assignBatch").innerHTML =
-        list.map(b=>`<option value="${b.BatchID}">${b.BatchName} (${b.BatchID})</option>`).join("");
+        list.map(b => `<option value="${b.BatchID}">${b.BatchName} (${b.BatchID})</option>`).join("");
     }
 
-    async function createBatch(){
-      showLoader(true,"Creating Batch...");
+    async function createBatch() {
+      showLoader(true, "Creating Batch...");
       const batchName = document.getElementById("batchName").value.trim();
 
       const data = await apiPOST({
-        action:"adminCreateBatch",
+        action: "adminCreateBatch",
         adminId: admin.adminId,
         adminPass: admin.adminPass,
         batchName
       });
       showLoader(false);
 
-      if(data.success){
-        toast("Batch Created ✅","success");
+      if (data.success) {
+        toast("Batch Created ✅", "success");
         document.getElementById("batchMsg").innerHTML = `✅ Created: <b>${data.batchName}</b> (${data.batchId})`;
-        document.getElementById("batchName").value="";
+        document.getElementById("batchName").value = "";
         loadBatches();
-      }else toast(data.message,"error");
+      } else toast(data.message, "error");
     }
 
-    async function createIntern(){
-      showLoader(true,"Creating Intern...");
+    async function createIntern() {
+      showLoader(true, "Creating Intern...");
       const name = document.getElementById("inName").value.trim();
       const email = document.getElementById("inEmail").value.trim();
       const batchId = document.getElementById("inBatch").value;
       const duration = document.getElementById("inDuration").value;
 
       const data = await apiGET({
-  action:"adminCreateInternGET",
-  adminId: admin.adminId,
-  adminPass: admin.adminPass,
-  name, email, batchId, duration
-});
+        action: "adminCreateInternGET",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        name, email, batchId, duration
+      });
 
       showLoader(false);
 
-      if(data.success){
-        toast("Intern Created ✅","success");
+      if (data.success) {
+        toast("Intern Created ✅", "success");
         document.getElementById("createdInternText").innerHTML =
           `✅ InternID: <b>${data.internId}</b> | Batch: <b>${data.batchName}</b>`;
         loadInterns();
-      }else toast(data.message,"error");
+      } else toast(data.message, "error");
     }
 
 
 
-    async function assignBatchTask(){
-      showLoader(true,"Assigning Batch Task...");
+    async function assignBatchTask() {
+      showLoader(true, "Assigning Batch Task...");
       const date = document.getElementById("taskDate").value;
       const batchId = document.getElementById("assignBatch").value;
       const title = document.getElementById("taskTitle").value.trim();
       const description = document.getElementById("taskDesc").value.trim();
 
       const data = await apiPOST({
-        action:"adminAssignBatchTask",
+        action: "adminAssignBatchTask",
         adminId: admin.adminId,
         adminPass: admin.adminPass,
         date, batchId, title, description
       });
       showLoader(false);
 
-      if(data.success) toast("Batch Task Assigned ✅","success");
-      else toast(data.message,"error");
+      if (data.success) toast("Batch Task Assigned ✅", "success");
+      else toast(data.message, "error");
     }
 
-    async function assignIndividualTask(){
-      showLoader(true,"Assigning Individual Task...");
+    async function assignIndividualTask() {
+      showLoader(true, "Assigning Individual Task...");
       const date = document.getElementById("taskDate").value;
       const internId = document.getElementById("assignInternId").value.trim();
       const title = document.getElementById("taskTitle").value.trim();
       const description = document.getElementById("taskDesc").value.trim();
 
       const data = await apiPOST({
-        action:"adminAssignIndividualTask",
+        action: "adminAssignIndividualTask",
         adminId: admin.adminId,
         adminPass: admin.adminPass,
         date, internId, title, description
       });
       showLoader(false);
 
-      if(data.success) toast("Individual Task Assigned ✅","success");
-      else toast(data.message,"error");
+      if (data.success) toast("Individual Task Assigned ✅", "success");
+      else toast(data.message, "error");
     }
 
-    async function loadSubmissions(silent=false){
-      showLoader(true,"Loading Submissions...", silent);
+    async function loadSubmissions(silent = false) {
+      showLoader(true, "Loading Submissions...", silent);
       const data = await apiGET({
-        action:"getPendingSubmissions",
+        action: "getPendingSubmissions",
         adminId: admin.adminId,
         adminPass: admin.adminPass
       });
-      showLoader(false,"", silent);
-      if(!data.success){ toast(data.message,"error"); return; }
+      showLoader(false, "", silent);
+      if (!data.success) { toast(data.message, "error"); return; }
 
       const tb = document.getElementById("subsTable");
       tb.innerHTML = "";
 
-      if((data.submissions||[]).length===0){
+      if ((data.submissions || []).length === 0) {
         tb.innerHTML = `<tr><td colspan="9">No pending submissions ✅</td></tr>`;
         return;
       }
 
-      data.submissions.forEach(s=>{
+      data.submissions.forEach(s => {
         tb.innerHTML += `
           <tr>
             <td>${s.SubmissionID}</td>
             <td>${s.AssignedTaskID}</td>
-            <td><b>${s.InternID}</b></td>
+           <td class="internCell">
+             <b>${s.InternID}</b>
+             <span class="internTooltip">${s.Name}</span>
+          </td>
+
             <td><a href="${s.Link}" target="_blank" style="color:var(--p3);font-weight:900;">Open</a></td>
             <td>${s.Details || "-"}</td>
             <td>${s.SubmittedAt}</td>
@@ -633,13 +766,13 @@ const visitedAdminPages = {
       });
     }
 
-    async function grade(submissionId, finalStatus){
-      showLoader(true,"Saving Grade...");
-      const grade = document.getElementById("g_"+submissionId).value.trim();
-      const remarks = document.getElementById("r_"+submissionId).value.trim();
+    async function grade(submissionId, finalStatus) {
+      showLoader(true, "Saving Grade...");
+      const grade = document.getElementById("g_" + submissionId).value.trim();
+      const remarks = document.getElementById("r_" + submissionId).value.trim();
 
       const data = await apiPOST({
-        action:"adminGradeSubmission",
+        action: "adminGradeSubmission",
         adminId: admin.adminId,
         adminPass: admin.adminPass,
         submissionId,
@@ -649,31 +782,31 @@ const visitedAdminPages = {
       });
       showLoader(false);
 
-      if(data.success){
-        toast("Graded ✅","success");
+      if (data.success) {
+        toast("Graded ✅", "success");
         loadSubmissions();
-      }else toast(data.message,"error");
+      } else toast(data.message, "error");
     }
 
     // ✅ Intern Overview Modal (Requires backend GET adminInternOverview)
-    function closeInternModal(){
+    function closeInternModal() {
       document.getElementById("internModal").classList.remove("show");
     }
 
-    async function openInternOverview(internId){
+    async function openInternOverview(internId) {
       document.getElementById("internModal").classList.add("show");
       document.getElementById("modalMeta").innerText = "Loading intern data...";
       document.getElementById("modalHistory").innerHTML = `<tr><td colspan="5">Loading...</td></tr>`;
 
       const data = await apiGET({
-        action:"adminInternOverview",
+        action: "adminInternOverview",
         adminId: admin.adminId,
         adminPass: admin.adminPass,
         internId
       });
 
-      if(!data.success){
-        toast(data.message,"error");
+      if (!data.success) {
+        toast(data.message, "error");
         closeInternModal();
         return;
       }
@@ -692,12 +825,12 @@ const visitedAdminPages = {
 
       const history = (data.history || []).slice(0, 50);
 
-      if(history.length === 0){
+      if (history.length === 0) {
         tb.innerHTML = `<tr><td colspan="5">No history found ✅</td></tr>`;
         return;
       }
 
-      history.forEach(h=>{
+      history.forEach(h => {
         const subLink = h.SubmissionLink
           ? `<a href="${h.SubmissionLink}" target="_blank" style="color:var(--p3);font-weight:900;">Open</a>`
           : "-";
@@ -718,33 +851,33 @@ const visitedAdminPages = {
     }
 
     // ✅ default date for incomplete
-document.getElementById("incompleteDate").value = new Date().toISOString().slice(0,10);
+    document.getElementById("incompleteDate").value = new Date().toISOString().slice(0, 10);
 
-async function loadIncomplete(silent=false){
-  showLoader(true,"Loading Incomplete...", silent);
-  const date = document.getElementById("incompleteDate").value;
+    async function loadIncomplete(silent = false) {
+      showLoader(true, "Loading Incomplete...", silent);
+      const date = document.getElementById("incompleteDate").value;
 
-  const data = await apiGET({
-    action:"getIncompleteStudents",
-    adminId: admin.adminId,
-    adminPass: admin.adminPass,
-    date
-  });
+      const data = await apiGET({
+        action: "getIncompleteStudents",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        date
+      });
 
-   showLoader(false,"", silent);
-   
-  if(!data.success){ toast(data.message,"error"); return; }
+      showLoader(false, "", silent);
 
-  const tb = document.getElementById("incompleteTable");
-  tb.innerHTML = "";
+      if (!data.success) { toast(data.message, "error"); return; }
 
-  if((data.students||[]).length===0){
-    tb.innerHTML = `<tr><td colspan="6">✅ No incomplete students today</td></tr>`;
-    return;
-  }
+      const tb = document.getElementById("incompleteTable");
+      tb.innerHTML = "";
 
-  data.students.forEach(s=>{
-    tb.innerHTML += `
+      if ((data.students || []).length === 0) {
+        tb.innerHTML = `<tr><td colspan="6">✅ No incomplete students today</td></tr>`;
+        return;
+      }
+
+      data.students.forEach(s => {
+        tb.innerHTML += `
       <tr>
         <td><b>${s.InternID}</b></td>
         <td>${s.Name}</td>
@@ -756,153 +889,153 @@ async function loadIncomplete(silent=false){
         </td>
       </tr>
     `;
-  });
-}
+      });
+    }
 
-// ✅ Chat state
-let CURRENT_CHAT_INTERN = "";
+    // ✅ Chat state
+    let CURRENT_CHAT_INTERN = "";
 
-function closeChat(){
-  document.getElementById("chatModal").classList.remove("show");
-  CURRENT_CHAT_INTERN = "";
-}
+    function closeChat() {
+      document.getElementById("chatModal").classList.remove("show");
+      CURRENT_CHAT_INTERN = "";
+    }
 
-async function openChat(internId, name){
-  CURRENT_CHAT_INTERN = internId;
-  document.getElementById("chatModal").classList.add("show");
-  document.getElementById("chatMeta").innerText = `Intern: ${name} (${internId}) | Auto delete in 48h`;
-  await loadChatMessages();
-}
+    async function openChat(internId, name) {
+      CURRENT_CHAT_INTERN = internId;
+      document.getElementById("chatModal").classList.add("show");
+      document.getElementById("chatMeta").innerText = `Intern: ${name} (${internId}) | Auto delete in 48h`;
+      await loadChatMessages();
+    }
 
-async function loadChatMessages(silent=false){
-  const data = await apiGET({
-    action:"getChat",
-    adminId: admin.adminId,
-    adminPass: admin.adminPass,
-    internId: CURRENT_CHAT_INTERN
-  });
+    async function loadChatMessages(silent = false) {
+      const data = await apiGET({
+        action: "getChat",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        internId: CURRENT_CHAT_INTERN
+      });
 
-  const tb = document.getElementById("chatTable");
-  tb.innerHTML = "";
+      const tb = document.getElementById("chatTable");
+      tb.innerHTML = "";
 
-  if(!data.success){
-    tb.innerHTML = `<tr><td colspan="3">${data.message}</td></tr>`;
-    return;
-  }
+      if (!data.success) {
+        tb.innerHTML = `<tr><td colspan="3">${data.message}</td></tr>`;
+        return;
+      }
 
-  if((data.messages||[]).length===0){
-    tb.innerHTML = `<tr><td colspan="3">No messages ✅</td></tr>`;
-    return;
-  }
+      if ((data.messages || []).length === 0) {
+        tb.innerHTML = `<tr><td colspan="3">No messages ✅</td></tr>`;
+        return;
+      }
 
-  data.messages.forEach(m=>{
-    tb.innerHTML += `
+      data.messages.forEach(m => {
+        tb.innerHTML += `
       <tr>
         <td><b>${m.Sender}</b></td>
         <td>${m.Message}</td>
         <td>${m.CreatedAt}</td>
       </tr>
     `;
-  });
-}
-
-async function adminSendMsg(){
-  const message = document.getElementById("chatMsg").value.trim();
-  if(!message){ toast("Message empty ❌","error"); return; }
-
-  showLoader(true,"Sending message...");  // ✅ manual => loader ON
-
-  const data = await apiGET({
-    action:"sendMessageGET",
-    adminId: admin.adminId,
-    adminPass: admin.adminPass,
-    internId: CURRENT_CHAT_INTERN,
-    sender:"Admin",
-    message
-  });
-
-  showLoader(false); // ✅ loader OFF
-
-  if(data.success){
-    toast("Sent ✅","success");
-    document.getElementById("chatMsg").value = "";
-    loadChatMessages(true); // ✅ reload silently
-  }else{
-    toast(data.message,"error");
-  }
-}
-
-
-async function adminClearChat(){
-  showLoader(true,"Clearing Chat...");
-  const data = await apiGET({
-    action:"clearChatGET",
-    adminId: admin.adminId,
-    adminPass: admin.adminPass,
-    internId: CURRENT_CHAT_INTERN,
-    by:"Admin"
-  });
-  showLoader(false);
-
-  if(data.success){
-    toast("Chat cleared ✅","success");
-    loadChatMessages();
-  }else toast(data.message,"error");
-}
-
-
-let AUTO_REFRESH_TIMER = null;
-
-function startAutoRefreshAdmin(){
-  if(AUTO_REFRESH_TIMER) clearInterval(AUTO_REFRESH_TIMER);
-
-  AUTO_REFRESH_TIMER = setInterval(async ()=>{
-    if(document.hidden) return;
-
-    const activePage = document.querySelector(".pageSection.active")?.id || "";
-
-    if(activePage === "studentsPage") await loadInterns(true);
-    // if(activePage === "subsPage") await loadSubmissions(true);
-    if(activePage === "incompletePage") await loadIncomplete(true);
-
-    if(document.getElementById("chatModal")?.classList.contains("show")){
-      await loadChatMessages(true);
+      });
     }
 
-  }, 4000); // ✅ 4 sec smooth
-}
+    async function adminSendMsg() {
+      const message = document.getElementById("chatMsg").value.trim();
+      if (!message) { toast("Message empty ❌", "error"); return; }
 
-async function loadInterns(silent=false){
-  showLoader(true,"Loading Students...", silent);
+      showLoader(true, "Sending message...");  // ✅ manual => loader ON
 
-  const batchId = document.getElementById("filterBatch").value;
-  const sort = document.getElementById("sortType").value;
+      const data = await apiGET({
+        action: "sendMessageGET",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        internId: CURRENT_CHAT_INTERN,
+        sender: "Admin",
+        message
+      });
 
-  const data = await apiGET({
-    action:"getInternsList",
-    adminId: admin.adminId,
-    adminPass: admin.adminPass,
-    batchId,
-    sort
-  });
+      showLoader(false); // ✅ loader OFF
 
-  showLoader(false,"", silent);
+      if (data.success) {
+        toast("Sent ✅", "success");
+        document.getElementById("chatMsg").value = "";
+        loadChatMessages(true); // ✅ reload silently
+      } else {
+        toast(data.message, "error");
+      }
+    }
 
-  if(!data.success){
-    if(!silent) toast(data.message,"error");
-    return;
-  }
 
-  const tb = document.getElementById("internTable");
-  tb.innerHTML = "";
+    async function adminClearChat() {
+      showLoader(true, "Clearing Chat...");
+      const data = await apiGET({
+        action: "clearChatGET",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        internId: CURRENT_CHAT_INTERN,
+        by: "Admin"
+      });
+      showLoader(false);
 
-  if((data.interns||[]).length===0){
-    tb.innerHTML = `<tr><td colspan="6">No interns found ✅</td></tr>`;
-    return;
-  }
+      if (data.success) {
+        toast("Chat cleared ✅", "success");
+        loadChatMessages();
+      } else toast(data.message, "error");
+    }
 
-  data.interns.forEach(i=>{
-    tb.innerHTML += `
+
+    let AUTO_REFRESH_TIMER = null;
+
+    function startAutoRefreshAdmin() {
+      if (AUTO_REFRESH_TIMER) clearInterval(AUTO_REFRESH_TIMER);
+
+      AUTO_REFRESH_TIMER = setInterval(async () => {
+        if (document.hidden) return;
+
+        const activePage = document.querySelector(".pageSection.active")?.id || "";
+
+        if (activePage === "studentsPage") await loadInterns(true);
+        // if(activePage === "subsPage") await loadSubmissions(true);
+        if (activePage === "incompletePage") await loadIncomplete(true);
+
+        if (document.getElementById("chatModal")?.classList.contains("show")) {
+          await loadChatMessages(true);
+        }
+
+      }, 4000); // ✅ 4 sec smooth
+    }
+
+    async function loadInterns(silent = false) {
+      showLoader(true, "Loading Students...", silent);
+
+      const batchId = document.getElementById("filterBatch").value;
+      const sort = document.getElementById("sortType").value;
+
+      const data = await apiGET({
+        action: "getInternsList",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        batchId,
+        sort
+      });
+
+      showLoader(false, "", silent);
+
+      if (!data.success) {
+        if (!silent) toast(data.message, "error");
+        return;
+      }
+
+      const tb = document.getElementById("internTable");
+      tb.innerHTML = "";
+
+      if ((data.interns || []).length === 0) {
+        tb.innerHTML = `<tr><td colspan="6">No interns found ✅</td></tr>`;
+        return;
+      }
+
+      data.interns.forEach(i => {
+        tb.innerHTML += `
       <tr>
         <td><b>${i.InternID}</b></td>
         <td>${i.Name}</td>
@@ -912,9 +1045,106 @@ async function loadInterns(silent=false){
         <td><button class="dotBtn" onclick="openInternOverview('${i.InternID}')">⋮</button></td>
       </tr>
     `;
-  });
-}
+      });
+    }
 
+    let statusChart, batchChart;
+    let trendChart;
+
+    async function loadAnalytics() {
+
+      showLoader(true, "Loading Analytics...");
+
+      const data = await apiGET({
+        action: "getAdminAnalytics",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass
+      });
+
+      showLoader(false);
+
+      if (!data.success) {
+        toast(data.message, "error");
+        return;
+      }
+
+      const k = data.kpis;
+
+      document.getElementById("kTotal").innerText = k.totalInterns;
+      document.getElementById("kActive").innerText = k.activeInterns;
+      document.getElementById("kPending").innerText = k.pending;
+      document.getElementById("kApproved").innerText = k.approved;
+      document.getElementById("kPercent").innerText = k.approvalPercent + "%";
+      document.getElementById("kAvg").innerText = k.avgGrade || 0;
+      document.getElementById("kDay").innerText = k.mostActiveDay || "-";
+
+      // ===== STATUS CHART =====
+      const s = data.charts.status;
+
+      if (statusChart) statusChart.destroy();
+
+      statusChart = new Chart(
+        document.getElementById("statusChart"),
+        {
+          type: "pie",
+          data: {
+            labels: s.labels,
+            datasets: [{ data: s.data }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false
+          }
+        }
+      );
+
+
+      // ===== BATCH CHART =====
+      const b = data.charts.batch;
+
+      if (batchChart) batchChart.destroy();
+
+      batchChart = new Chart(
+        document.getElementById("batchChart"),
+        {
+          type: "bar",
+          data: {
+            labels: b.labels,
+            datasets: [{ data: b.data }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false
+          }
+        }
+      );
+
+
+      // ===== TREND CHART =====
+      const t = data.charts.trend;
+
+      if (trendChart) trendChart.destroy();
+
+      trendChart = new Chart(
+        document.getElementById("trendChart"),
+        {
+          type: "line",
+          data: {
+            labels: t.labels,
+            datasets: [{
+              label: "Submissions",
+              data: t.data
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false
+          }
+        }
+      );
+
+
+    }
 
 
 
@@ -923,4 +1153,5 @@ async function loadInterns(silent=false){
 
   </script>
 </body>
+
 </html>
