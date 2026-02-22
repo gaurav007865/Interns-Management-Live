@@ -1,5 +1,5 @@
 // ✅ PUT YOUR APPS SCRIPT WEB APP URL HERE (must end with /exec)
-const API_URL = "https://script.google.com/macros/s/AKfycbzq8zKiQ1CkMkVvP5vzHnCLLN_8mEaLshMjJuF9nsYil0dhfehVHBk4C1WVt-EGcJGmaA/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwxXVViSlxMP50T0nl5M-qMhdakhhA49ouZJafpLVa0qh7uebbHz_li4J6QQdSqCf4dVg/exec";
 
 // ===============================
 // Loader + Toast
