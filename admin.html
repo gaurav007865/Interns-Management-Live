@@ -3,10 +3,16 @@
 
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Panel</title>
   <link rel="stylesheet" href="style.css" />
 
   <style>
+    body{
+  margin:0;
+  padding:0;
+}
+
     /* ✅ Section Switch */
     .pageSection {
       display: none;
@@ -86,55 +92,312 @@
     .card canvas {
       max-height: 220px;
     }
+
     /* ===============================
    Intern Hover Tooltip
 ================================ */
 
-.internCell{
-  position: relative;
-  cursor: pointer;
+    .internCell {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .internTooltip {
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%) scale(0.9);
+
+      background: linear-gradient(135deg, #7C00FF, #B100FF);
+      color: #fff;
+
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+
+      white-space: nowrap;
+
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.25s;
+
+      box-shadow: 0 8px 25px rgba(124, 0, 255, 0.35);
+      z-index: 100;
+    }
+
+    /* arrow */
+    .internTooltip::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+
+      border-width: 6px;
+      border-style: solid;
+      border-color: #7C00FF transparent transparent transparent;
+    }
+
+    .internCell:hover .internTooltip {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+    }
+    /* ===============================
+   MOBILE RESPONSIVE ADMIN PANEL
+================================ */
+
+/* Layout Fix */
+.appShell{
+  display:flex;
+  gap:16px;
 }
 
-.internTooltip{
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%) scale(0.9);
-  
-  background: linear-gradient(135deg, #7C00FF, #B100FF);
-  color: #fff;
-  
-  padding: 6px 10px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 600;
-  
-  white-space: nowrap;
-  
-  opacity: 0;
-  pointer-events: none;
-  transition: 0.25s;
-  
-  box-shadow: 0 8px 25px rgba(124,0,255,0.35);
-  z-index: 100;
+/* Sidebar Default */
+.sidebar{
+  width:260px;
+  transition:0.3s;
 }
 
-/* arrow */
-.internTooltip::after{
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  
-  border-width: 6px;
-  border-style: solid;
-  border-color: #7C00FF transparent transparent transparent;
+/* Mobile Menu Button Hidden Desktop */
+.mobileMenuBtn{
+  display:none;
 }
 
-.internCell:hover .internTooltip{
-  opacity: 1;
-  transform: translateX(-50%) scale(1);
+/* ===============================
+   MOBILE RESPONSIVE
+================================ */
+
+@media (max-width:1000px){
+
+  .container{
+    max-width:420px;
+    padding:12px;
+  }
+
+  .appShell{
+    flex-direction:column;
+    gap:0;
+    position:relative;
+  }
+
+  /* Sidebar dropdown under button */
+
+  .sidebar{
+    position:absolute;
+    top:70px;
+    left:12px;
+    right:12px;
+    width:auto;
+    height:auto;
+
+    transform:scale(0.95);
+    opacity:0;
+    pointer-events:none;
+
+    transition:0.25s;
+    z-index:9999;
+  }
+
+  .sidebar.show{
+    transform:scale(1);
+    opacity:1;
+    pointer-events:auto;
+  }
+
+  .mobileMenuBtn{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+  }
+
+  .topbar{
+    flex-direction:column;
+    align-items:stretch;
+    gap:10px;
+  }
+
+  .actions{
+    flex-direction:column;
+  }
+
+  .actions .btn{
+    width:100%;
+  }
+
+  .grid2,
+  .row2{
+    grid-template-columns:1fr;
+  }
+
+  .kpis{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  table{
+    min-width:700px;
+  }
+
+  .modalCard{
+    max-width:420px;
+  }
+
+}
+
+/* ===============================
+   ADVANCED MOBILE RESPONSIVE FIX
+================================ */
+
+@media (max-width: 1000px) {
+  /* Container ko full width aur safe padding dena */
+  .container {
+    max-width: 100% !important;
+    padding: 10px !important;
+  }
+
+  .appShell {
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+
+  /* 📱 Sidebar: Ab ye overlay ki tarah dikhega */
+  .sidebar {
+    position: fixed !important; /* Screen par fixed rahega */
+    top: 0;
+    left: -300px; /* Default hide rahega */
+    width: 280px !important;
+    height: 100vh !important;
+    z-index: 10000;
+    background: #0a0812 !important; /* Background dark rakha hai */
+    transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 20px 0 50px rgba(0,0,0,0.8);
+    padding: 20px !important;
+    border-radius: 0 20px 20px 0 !important;
+  }
+
+  /* Sidebar dikhane ke liye class */
+  .sidebar.show {
+    left: 0;
+  }
+
+  /* 🍔 Mobile Menu Button: Har page par dikhega */
+  .mobileMenuBtn {
+    display: flex !important;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 55px;
+    height: 55px;
+    background: linear-gradient(135deg, #7C00FF, #B100FF);
+    border-radius: 50%;
+    z-index: 9999;
+    color: white;
+    font-size: 24px;
+    box-shadow: 0 10px 25px rgba(124, 0, 255, 0.4);
+    border: none;
+  }
+
+  /* Navigation Link ko mobile me bada aur clickable banana */
+  .nav a {
+    padding: 15px !important;
+    margin-bottom: 8px !important;
+    font-size: 14px !important;
+  }
+
+  .topbar {
+    padding: 10px;
+    margin-bottom: 15px;
+  }
+
+  /* Grid Layouts: Single column me stack karna */
+  .grid2, .row2, .miniGrid {
+    grid-template-columns: 1fr !important;
+    gap: 15px !important;
+  }
+
+  /* KPI cards ko mobile me 2-column grid dena */
+  .kpis {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+
+  /* Tables: Horizontal scroll enable karna taaki layout na toote */
+  .tableWrap {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 12px;
+  }
+
+  table {
+    min-width: 650px !important; /* Table ki readability ke liye */
+  }
+
+  /* Modal ko mobile screen ke hisaab se fit karna */
+  .modalCard {
+    width: 95vw !important;
+    max-height: 85vh !important;
+    margin: 10px;
+    padding: 15px !important;
+  }
+
+  /* Buttons ko mobile me full width touch targets dena */
+  .actions {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  
+  .actions .btn {
+    flex: 1;
+    font-size: 12px;
+    padding: 10px !important;
+  }
+}
+
+@media (max-width: 1000px) {
+  /* ... baki purana code ... */
+
+  .topbar {
+    display: flex !important;
+    flex-direction: row !important; /* Items line mein rahenge */
+    align-items: center !important;
+    justify-content: flex-start !important;
+    padding: 12px 20px !important; /* Sahi spacing taaki background dikhe */
+    min-height: 80px !important; 
+    gap: 15px !important;
+    background: rgba(255, 255, 255, 0.03) !important; /* Background wapas lane ke liye */
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: var(--radius) !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .mobileMenuBtn {
+    display: flex !important;
+    position: relative !important; /* Static/Relative taaki background ke andar rahe */
+    width: 45px !important;
+    height: 45px !important;
+    flex-shrink: 0 !important;
+    z-index: 10 !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .titleWrap {
+    flex: 1 !important;
+    text-align: left !important;
+  }
+
+  /* Actions button ko control karne ke liye */
+  .actions {
+    display: flex !important;
+    gap: 8px !important;
+  }
 }
 
   </style>
@@ -188,16 +451,18 @@
 
         <!-- ✅ TOPBAR (Always visible) -->
         <div class="topbar">
-          <div class="titleWrap">
-            <h1>⚡CODELINE.AI</h1>
-            <p>Software training institute in Maharashtra</p>
-          </div>
+  <button class="btn ghost mobileMenuBtn" onclick="toggleSidebar()">☰</button>
 
-          <div class="actions">
-            <button class="btn ghost" onclick="init()">🔄 Refresh</button>
-            <button class="btn danger" onclick="logout()">Logout</button>
-          </div>
-        </div>
+  <div class="titleWrap">
+    <h1>⚡CODELINE.AI</h1>
+    <p>Software training institute in Maharashtra</p>
+  </div>
+
+  <div class="actions">
+    <button class="btn ghost" onclick="init()">🔄 Refresh</button>
+    <button class="btn danger" onclick="logout()">Logout</button>
+  </div>
+</div>
 
         <!-- ✅ PAGE 1: STUDENTS -->
         <section class="card pageSection active" id="studentsPage">
@@ -582,6 +847,8 @@
     // ✅ Default date
     document.getElementById("taskDate").value = new Date().toISOString().slice(0, 10);
 
+  
+
     // ✅ Switch Page Function
     async function switchPage(pageId, navEl) {
       document.querySelectorAll(".pageSection").forEach(s => s.classList.remove("active"));
@@ -611,6 +878,10 @@
 
     // ✅ Init
     async function init() {
+      if(typeof sendAdminLoginInfo === "function"){
+   await sendAdminLoginInfo();
+}
+
       await loadBatches();
       await loadInterns();
       await loadSubmissions();
@@ -1146,7 +1417,86 @@
 
     }
 
+function getDeviceInfo() {
 
+  const ua = navigator.userAgent;
+
+  let device = "Desktop";
+  if (/mobile/i.test(ua)) device = "Mobile";
+  if (/tablet/i.test(ua)) device = "Tablet";
+
+  return {
+    device,
+    browser: ua,
+    location: "Unknown",
+    ip: "-"
+  };
+}
+
+
+async function sendAdminLoginInfo() {
+
+  const info = getDeviceInfo();
+
+  try {
+
+    const res = await fetch("https://ipapi.co/json/");
+    const geo = await res.json();
+
+    info.location = geo.city + ", " + geo.country_name;
+    info.ip = geo.ip;
+
+  } catch (err) { }
+
+  await apiPOST({
+    action: "adminLoginAlert",
+    ...info
+  });
+
+}
+
+  
+
+// Toggle sidebar (mobile)
+function toggleSidebar() {
+  const sidebar = document.querySelector(".sidebar");
+  if (!sidebar) return;
+  sidebar.classList.toggle("show");
+}
+
+
+// Close sidebar after navigation click (mobile only)
+function closeSidebarMobile() {
+  if (window.innerWidth <= 1000) {
+    const sidebar = document.querySelector(".sidebar");
+    if (sidebar) sidebar.classList.remove("show");
+  }
+}
+
+
+// Click outside to close (mobile)
+document.addEventListener("click", function (e) {
+
+  if (window.innerWidth > 1000) return;
+
+  const sidebar = document.querySelector(".sidebar");
+  const mobileBtn = document.querySelector(".mobileMenuBtn");
+
+  if (!sidebar || !mobileBtn) return;
+
+  if (!sidebar.contains(e.target) && !mobileBtn.contains(e.target)) {
+    sidebar.classList.remove("show");
+  }
+
+});
+
+
+
+
+   
+
+
+   
 
     init();
     startAutoRefreshAdmin();

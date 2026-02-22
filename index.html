@@ -1,433 +1,184 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>COD Internship System - Login</title>
-  <link rel="stylesheet" href="style.css" />
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COD Internship System | Login</title>
+  <link rel="stylesheet" href="style.css">
   <style>
-    /* ✅ Extra Premium Login Layout (Only for index page) */
-    .loginGrid{
-      display:grid;
+    /* Unique layout for login page to handle split screen */
+    .loginGrid {
+      display: grid;
       grid-template-columns: 1.1fr 0.9fr;
-      gap:18px;
-      margin-top:18px;
+      gap: 24px;
+      margin-top: 20px;
     }
-
-    .heroCard{
-      border:1px solid rgba(255,255,255,0.10);
-      border-radius: var(--radius);
-      background: linear-gradient(180deg, rgba(124,0,255,0.12), rgba(255,255,255,0.02));
-      box-shadow: var(--shadow);
-      padding:22px;
-      overflow:hidden;
-      position:relative;
+    .tabRow {
+      display: flex;
+      gap: 8px;
+      background: rgba(0,0,0,0.2);
+      padding: 6px;
+      border-radius: 18px;
+      margin-bottom: 20px;
     }
-
-    .heroCard::after{
-      content:"";
-      position:absolute;
-      right:-160px;top:-160px;
-      width:360px;height:360px;
-      background: radial-gradient(circle, rgba(255,45,247,0.20), transparent 70%);
-      filter: blur(2px);
-      pointer-events:none;
-    }
-
-    .heroTop{
-      display:flex;
-      align-items:center;
-      gap:12px;
-    }
-
-    .heroLogo{
-      width:62px;height:62px;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,0.12);
-      background: rgba(0,0,0,0.18);
-      overflow:hidden;
-      box-shadow: 0 0 60px rgba(124,0,255,0.20);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-    .heroLogo img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-    }
-
-    .heroTitle h1{
-      font-family: Orbitron, Inter, Arial;
-      font-size:20px;
-      letter-spacing:0.8px;
-      font-weight:900;
-    }
-    .heroTitle p{
+    .tabBtn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 14px;
+      cursor: pointer;
+      text-align: center;
+      font-weight: 800;
+      font-size: 13px;
+      transition: 0.3s;
       color: var(--muted);
-      margin-top:6px;
-      font-size:13px;
-      line-height:1.45;
+      border: 1px solid transparent;
     }
-
-    .featureList{
-      margin-top:18px;
-      display:grid;
-      gap:10px;
-    }
-
-    .featureItem{
-      display:flex;
-      gap:10px;
-      padding:12px 12px;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,0.08);
-      background: rgba(0,0,0,0.14);
-    }
-
-    .iconDot{
-      width:38px;height:38px;
-      border-radius:14px;
-      border:1px solid rgba(124,0,255,0.22);
-      background: linear-gradient(135deg, rgba(124,0,255,0.25), rgba(255,45,247,0.12));
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-weight:900;
-      box-shadow: 0 0 35px rgba(124,0,255,0.18);
-    }
-
-    .featureItem b{
-      display:block;
-      font-size:13px;
-      font-weight:900;
-      letter-spacing:0.2px;
-    }
-    .featureItem span{
-      display:block;
-      color:var(--muted);
-      font-size:12px;
-      margin-top:4px;
-      line-height:1.45;
-    }
-
-    .loginCard{
-      border:1px solid rgba(255,255,255,0.10);
-      border-radius: var(--radius);
-      background: rgba(255,255,255,0.03);
-      box-shadow: var(--shadow);
-      padding:18px;
-      overflow:hidden;
-      position:relative;
-    }
-
-    .loginCard::before{
-      content:"";
-      position:absolute;
-      left:-120px;bottom:-120px;
-      width:260px;height:260px;
-      background: radial-gradient(circle, rgba(124,0,255,0.22), transparent 70%);
-      pointer-events:none;
-    }
-
-    .tabRow{
-      display:flex;
-      gap:10px;
-      padding:8px;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,0.08);
-      background: rgba(0,0,0,0.16);
-      overflow:auto;
-    }
-    .tabBtn{
-      flex:1;
-      min-width:120px;
-      padding:10px 12px;
-      border-radius:16px;
-      cursor:pointer;
-      border:1px solid transparent;
-      background: rgba(255,255,255,0.02);
-      color: var(--muted);
-      font-weight:900;
-      transition:0.2s;
-      text-align:center;
-      white-space:nowrap;
-    }
-    .tabBtn.active{
+    .tabBtn.active {
+      background: linear-gradient(135deg, rgba(124,0,255,0.2), rgba(255,45,247,0.1));
       color: var(--text);
-      border-color: rgba(124,0,255,0.35);
-      background: linear-gradient(135deg, rgba(124,0,255,0.25), rgba(255,45,247,0.12));
-      box-shadow: 0 0 35px rgba(124,0,255,0.15);
+      border-color: rgba(124,0,255,0.3);
+      box-shadow: 0 0 20px rgba(124,0,255,0.15);
+    }
+    .tabPanel { display: none; animation: fadeIn 0.4s ease; }
+    .tabPanel.show { display: block; }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    .tabPanel{
-      display:none;
-      margin-top:14px;
-      padding-top:14px;
-      border-top:1px solid rgba(255,255,255,0.08);
-    }
-    .tabPanel.show{display:block;}
-
-    .formTitle{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      margin-bottom:10px;
-    }
-    .formTitle h2{
-      font-size:15px;
-      font-weight:900;
-      letter-spacing:0.2px;
-    }
-    .formTitle span{
-      font-size:12px;
-      color:var(--muted);
-      border:1px solid rgba(255,255,255,0.10);
-      background: rgba(0,0,0,0.14);
-      padding:6px 10px;
-      border-radius:999px;
-    }
-
-    @media(max-width: 1000px){
-      .loginGrid{grid-template-columns:1fr;}
+    @media (max-width: 1000px) {
+      .loginGrid { grid-template-columns: 1fr; }
+      .heroCard { display: none; } /* Hide heavy hero on small mobile if needed */
     }
   </style>
 </head>
-
 <body>
   <div class="container">
-
-    <!-- Topbar -->
-    <div class="topbar">
+    <header class="topbar">
       <div class="titleWrap">
-        <h1>⚡CODELINE.AI</h1>
-        <p>formerly known as Asterisc Computer Institute</p>
+        <h1>⚡ CODELINE.AI</h1>
+        <p>Software Training Institute, Maharashtra</p>
       </div>
-
       <div class="actions">
         <button class="btn ghost" onclick="window.location.reload()">🔄 Reload</button>
       </div>
-    </div>
+    </header>
 
-    <!-- Premium Login Grid -->
     <div class="loginGrid">
-
-      <!-- Left: Brand / Features -->
-      <section class="heroCard">
-        <div class="heroTop">
-          <div class="heroLogo">
-            <img src="logo.png" alt="COD Logo">
-          </div>
-          <div class="heroTitle">
-            <h1>COD Internship Task System</h1>
-            <p>
-              Address: Block No-103, 2nd floor, Sharda Complex, Hingna Rd, Bansi Nagar, S R P Camp, Nagpur, Digdoh, Maharashtra 440016
-             📞 Phone: 077220 71227
-            </p>
+      <section class="card heroCard" style="display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden;">
+        <div style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: radial-gradient(circle, var(--p1), transparent 70%); opacity: 0.2; filter: blur(40px);"></div>
+        
+        <div class="brandBox" style="margin-bottom: 20px;">
+          <div class="brandLogo"><img src="logo.png" alt="COD"></div>
+          <div class="brandText">
+            <h3 style="font-size: 22px;">Internship Portal</h3>
+            <p>Nagpur | Maharashtra</p>
           </div>
         </div>
 
-        <div class="featureList">
-          <div class="featureItem">
-            <div class="iconDot">✅</div>
-            <div>
-              <b>Batch-wise Task System</b>
-              <span>Assign daily tasks.</span>
-            </div>
+        <div style="display: grid; gap: 15px;">
+          <div class="kpi" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border);">
+            <b style="color: var(--p3);">✓</b> <span>Batch-wise Task Tracking</span>
           </div>
-
-          <div class="featureItem">
-            <div class="iconDot">⚡</div>
-            <div>
-              <b>Fast Submissions</b>
-              <span>Intern will submit GitHub/Deployment link instantly.</span>
-            </div>
+          <div class="kpi" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border);">
+            <b style="color: var(--p3);">⚡</b> <span>GitHub & Deployment Links</span>
           </div>
-
-          <div class="featureItem">
-            <div class="iconDot">🎯</div>
-            <div>
-              <b>Grade + Remarks</b>
-              <span>Admin can approve/reject + grade + give feedback..</span>
-            </div>
-          </div>
-
-          <div class="featureItem">
-            <div class="iconDot">📚</div>
-            <div>
-              <b>History Saved</b>
-              <span>Full progress history will be maintained for 6/9 months.</span>
-            </div>
+          <div class="kpi" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border);">
+            <b style="color: var(--p3);">🏆</b> <span>Performance Based Badges</span>
           </div>
         </div>
-
-        <div class="small" style="margin-top:14px;">
-          💜 @All Right and Reserved By Codeline
-        </div>
+        <p class="small" style="margin-top: 20px;">Address: Block No-103, Sharda Complex, Hingna Rd, Nagpur.</p>
       </section>
 
-      <!-- Right: Tabbed Login -->
-      <section class="loginCard">
-
-        <!-- Tabs -->
+      <section class="card">
         <div class="tabRow">
-          <div class="tabBtn active" onclick="openTab('adminTab')">👑 Admin</div>
-          <div class="tabBtn" onclick="openTab('internTab')">👨‍💻 Intern</div>
-          <div class="tabBtn" onclick="openTab('passTab')">🔐 Set Password</div>
+          <div class="tabBtn active" onclick="openTab('adminTab', this)">👑 Admin</div>
+          <div class="tabBtn" onclick="openTab('internTab', this)">👨‍💻 Intern</div>
+          <div class="tabBtn" onclick="openTab('passTab', this)">🔐 Set Pass</div>
         </div>
 
-        <!-- Admin Tab -->
         <div id="adminTab" class="tabPanel show">
-          <div class="formTitle">
-            <h2>👑 Admin Login</h2>
-            <span>Secure</span>
-          </div>
-
+          <div class="cardHead"><h2>Admin Access</h2><span>Secure Portal</span></div>
           <label>Admin ID</label>
-          <input id="adminId" placeholder="ID"/>
-
+          <input type="text" id="adminId" placeholder="Enter ID">
           <label>Password</label>
-          <input id="adminPass" type="password" placeholder="Enter admin password" />
-
-          <button class="btn primary" onclick="adminLogin()">Login as Admin</button>
-
-          <div class="small">
-            ✅ Only For Admin Login.
-          </div>
+          <input type="password" id="adminPass" placeholder="••••••••">
+          <button class="btn primary" style="width: 100%; margin-top: 20px;" onclick="adminLogin()">Login as Admin</button>
         </div>
 
-        <!-- Intern Tab -->
         <div id="internTab" class="tabPanel">
-          <div class="formTitle">
-            <h2>👨‍💻 Intern Login</h2>
-            <span>Task Submit</span>
-          </div>
-
+          <div class="cardHead"><h2>Intern Login</h2><span>Daily Task Submission</span></div>
           <label>Intern ID</label>
-          <input id="internId" placeholder="Enter ID" />
-
+          <input type="text" id="internId" placeholder="COD0000">
           <label>Password</label>
-          <input id="internPass" type="password" placeholder="Enter password" />
-
-          <button class="btn primary" onclick="internLogin()">Login as Intern</button>
-
-          <div class="small">
-            ✅ First time? Need to set a password?.
-          </div>
+          <input type="password" id="internPass" placeholder="••••••••">
+          <button class="btn primary" style="width: 100%; margin-top: 20px;" onclick="internLogin()">Login to Dashboard</button>
         </div>
 
-        <!-- Set Password Tab -->
         <div id="passTab" class="tabPanel">
-          <div class="formTitle">
-            <h2>🔐 Set Password</h2>
-            <span>1 Time</span>
-          </div>
-
+          <div class="cardHead"><h2>Set Password</h2><span>One-time Setup</span></div>
           <label>Intern ID</label>
-          <input id="setInternId" placeholder="Enter ID" />
-
+          <input type="text" id="setInternId" placeholder="COD0000">
           <label>New Password</label>
-          <input id="newPass" type="password" placeholder="Create a strong password" />
-
-          <button class="btn" onclick="setPassword()">Set Password</button>
-
-          <div class="small">
-            ⚠️ This Password will set only once.
-          </div>
+          <input type="password" id="newPass" placeholder="Create strong password">
+          <button class="btn" style="width: 100%; margin-top: 20px;" onclick="setPassword()">Activate Account</button>
+          <p class="small">Note: Use the ID provided by Admin during registration.</p>
         </div>
-
       </section>
     </div>
   </div>
 
-  <!-- Loader + Toast -->
-  <div id="loaderOverlay" class="loaderOverlay">
-    <div class="loaderCard">
-      <div class="spinner"></div>
-      <div id="loaderText">Loading...</div>
-    </div>
-  </div>
+  <div id="loaderOverlay" class="loaderOverlay"><div class="loaderCard"><div class="spinner"></div><div id="loaderText">Processing...</div></div></div>
   <div id="toast" class="toast"></div>
 
   <script src="app.js"></script>
-
   <script>
-    function openTab(tabId){
-      document.querySelectorAll(".tabBtn").forEach(b=>b.classList.remove("active"));
-
-      const btns = document.querySelectorAll(".tabBtn");
-      if(tabId==="adminTab") btns[0].classList.add("active");
-      if(tabId==="internTab") btns[1].classList.add("active");
-      if(tabId==="passTab") btns[2].classList.add("active");
-
-      document.querySelectorAll(".tabPanel").forEach(p=>p.classList.remove("show"));
-      document.getElementById(tabId).classList.add("show");
+    function openTab(tabId, btn) {
+      document.querySelectorAll('.tabPanel').forEach(p => p.classList.remove('show'));
+      document.querySelectorAll('.tabBtn').forEach(b => b.classList.remove('active'));
+      document.getElementById(tabId).classList.add('show');
+      btn.classList.add('active');
     }
 
-    async function adminLogin(){
-      showLoader(true,"Checking Admin...");
+    async function adminLogin() {
+      showLoader(true, "Authenticating...");
       const adminId = document.getElementById("adminId").value.trim();
       const adminPass = document.getElementById("adminPass").value.trim();
-
       const data = await apiPOST({action:"adminLogin", adminId, adminPass});
       showLoader(false);
-
-      if(data.success){
+      if(data.success) {
         saveSession("admin", {adminId, adminPass});
-        toast("Admin Login ✅","success");
-        setTimeout(()=> window.location.href="admin.html", 600);
-      }else{
-        toast(data.message,"error");
-      }
+        toast("Welcome Admin! ✅", "success");
+        setTimeout(() => window.location.href="admin.html", 800);
+      } else toast(data.message, "error");
     }
 
-    async function internLogin(){
-      showLoader(true,"Checking Intern...");
+    async function internLogin() {
+      showLoader(true, "Logging in...");
       const internId = document.getElementById("internId").value.trim();
       const password = document.getElementById("internPass").value.trim();
-
       const data = await apiPOST({action:"internLogin", internId, password});
       showLoader(false);
-
-      if(data.success){
+      if(data.success) {
         saveSession("intern", data.intern);
-        toast("Intern Login ✅","success");
-        setTimeout(()=> window.location.href="intern.html", 600);
-      }else{
-        toast(data.message,"error");
-      }
+        toast("Login Successful! 🚀", "success");
+        setTimeout(() => window.location.href="intern.html", 800);
+      } else toast(data.message, "error");
     }
 
-    async function setPassword(){
-      showLoader(true,"Setting Password...");
+    async function setPassword() {
+      showLoader(true, "Setting Password...");
       const internId = document.getElementById("setInternId").value.trim();
       const newPassword = document.getElementById("newPass").value.trim();
-
       const data = await apiPOST({action:"internSetPassword", internId, newPassword});
       showLoader(false);
-
-      if(data.success){
-        toast("Password Set ✅ Now login","success");
-        openTab("internTab");
-      }else{
-        toast(data.message,"error");
-      }
+      if(data.success) {
+        toast("Password Set! Please login. ✅", "success");
+        openTab('internTab', document.querySelectorAll('.tabBtn')[1]);
+      } else toast(data.message, "error");
     }
-
-    // ✅ Auto open Set Password via link (optional, safe)
-    (function autoOpenSetPass(){
-      const hash = window.location.hash || "";
-      if(hash.startsWith("#setpass")){
-        const params = new URLSearchParams(hash.split("?")[1] || "");
-        const internId = params.get("internId");
-        if(internId){
-          document.getElementById("setInternId").value = internId;
-          openTab("passTab");
-          toast("Set your password ✅","success");
-        }
-      }
-    })();
   </script>
-</body>
+
+  </body>
 </html>

@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Intern Panel</title>
   <link rel="stylesheet" href="style.css" />
 
@@ -146,12 +147,176 @@
   background: #39d353;
 }
 
-    @media(max-width:1000px) {
-      .miniGrid {
-        grid-template-columns: 1fr;
-      }
-    }
+@media (max-width: 1000px) {
+  /* 1. Shell Fix: Taaki scroll aur layers barobar rahein */
+  .appShell {
+    display: block !important;
+    position: relative !important;
+    min-height: 100vh;
+    background: #05050A !important; /* Poora background dark */
+  }
+
+  /* 2. Topbar: Isse compact aur solid rakha hai */
+  .topbar {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 10px 15px !important;
+    min-height: 70px !important;
+    background: #110f1a !important; /* Solid color, NO Transparency */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: sticky !important;
+    top: 0;
+    z-index: 1000 !important; /* Sections ke upar rahega */
+    margin-bottom: 10px !important;
+  }
+
+  /* 3. Hamburger Button: Left Side */
+  .mobileMenuBtn {
+    display: flex !important;
+    width: 42px !important;
+    height: 42px !important;
+    background: #7c00ff !important;
+    border-radius: 10px !important;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    z-index: 1100;
+  }
+
+  /* 4. Text Sections: Isse hide kiya taaki overlap na ho */
+  .titleWrap, .titleWrap p {
+    display: none !important; 
+  }
+
+  /* 5. Refresh/Logout Buttons: Right Side Stacked */
+  .actions {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+    align-items: flex-end !important;
+  }
+
+  .actions .btn {
+    width: 80px !important;
+    padding: 4px 0 !important;
+    font-size: 10px !important;
+    margin: 0 !important;
+    justify-content: center;
+  }
+
+  /* 6. Sidebar: Sabse Top Layer */
+  .sidebar {
+    position: fixed !important;
+    left: -100% !important;
+    top: 0;
+    bottom: 0;
+    width: 280px !important;
+    height: 100vh !important;
+    z-index: 999999 !important; /* Highest layer */
+    background: #0d0b1a !important; /* Solid dark */
+    box-shadow: 20px 0 50px rgba(0,0,0,0.9);
+    transition: 0.3s ease-in-out;
+    padding: 20px !important;
+    display: block !important;
+  }
+
+  .sidebar.show {
+    left: 0 !important;
+  }
+
+  /* 7. Main Content & Sections: Topbar ke niche stack honge */
+  .main {
+    padding: 0 10px !important;
+    width: 100% !important;
+    position: relative !important;
+    z-index: 1 !important;
+  }
+
+  .card {
+    background: #161425 !important; /* Solid card background, no transparency */
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    margin-bottom: 15px !important;
+    padding: 15px !important;
+    border-radius: 15px !important;
+  }
+
+  /* 8. Modal Fix: Overlap se bachne ke liye */
+  .modalOverlay {
+    z-index: 2000000 !important; /* Sidebar se bhi upar */
+    background: rgba(0,0,0,0.85) !important;
+  }
+
+  .modalCard {
+    width: 90% !important;
+    background: #1a182b !important;
+  }
+
+  /* Tables Fix */
+  .tableWrap {
+    overflow-x: auto !important;
+    background: rgba(255,255,255,0.02);
+    border-radius: 10px;
+  }
+
+
+  /* ////////////////// */
+
+  /* 1. Modal Close Button: Fixed Layout & No Shadows */
+  .modalCard .btn.danger {
+    background: #d95d56 !important;
+    color: white !important;
+    border: none !important;
+    
+    /* Shadows ko puri tarah khatam kiya */
+    box-shadow: none !important;
+    text-shadow: none !important;
+    outline: none !important;
+    
+    /* Responsive Width Logic */
+    width: 100% !important; /* Mobile par full width better lagti hai */
+    max-width: 300px !important; /* Lekin 300px se zyada bada nahi hoga */
+    min-width: unset !important; /* Purani min-width ko reset kiya */
+    
+    padding: 14px !important;
+    font-weight: 700 !important;
+    font-size: 15px !important;
+    border-radius: 12px !important;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .modalCard .btn.danger:active {
+    background: #b84a44 !important; /* Click karne par thoda dark feedback */
+  }
+
+  /* 2. Topbar Buttons: Clean & Flat */
+  .actions .btn {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    background: rgba(255, 255, 255, 0.05) !important; /* Halki solid feel */
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 8px !important;
+    color: white !important;
+  }
+
+  /* 3. Hamburger Button (☰): No Shadow & High Visibility */
+  .mobileMenuBtn {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    background: #7c00ff !important; /* Branded color */
+    border: none !important;
+    color: white !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+
+}
+
   </style>
+
 </head>
 
 <body>
@@ -195,6 +360,7 @@
 
         <!-- ✅ TOPBAR -->
         <div class="topbar">
+          <button class="btn ghost mobileMenuBtn" onclick="toggleSidebar()">☰</button>
           <div class="titleWrap">
             <h1>👨‍💻 Intern Panel</h1>
             <p id="internInfo">Loading...</p>
@@ -373,15 +539,18 @@
         </section>
 
         <div id="taskModal" class="modalOverlay">
-          <div class="modalCard">
-            <div style="display:flex;justify-content:space-between;">
-              <h3 id="modalTaskTitle"></h3>
-              <button class="btn danger" onclick="closeTaskModal()">Close</button>
-            </div>
+  <div class="modalCard" style="display: flex; flex-direction: column;">
+    <div style="display:flex; justify-content:space-between; align-items: center;">
+      <h3 id="modalTaskTitle" style="font-size: 16px; margin: 0;"></h3>
+      </div>
 
-            <div style="margin-top:12px;color:var(--muted);" id="modalTaskDesc"></div>
-          </div>
-        </div>
+    <div style="margin-top:15px; color:var(--muted); font-size: 14px;" id="modalTaskDesc"></div>
+
+    <div style="display: flex; justify-content: flex-end;">
+       <button class="btn danger" onclick="closeTaskModal()">Close</button>
+    </div>
+  </div>
+</div>
 
 
       </main>
@@ -1001,8 +1170,53 @@ function openDayTasks(tasks){
 
   document.getElementById("taskModal").classList.add("show");
 }
+// ✅ Sidebar dikhane ya chhupane ka logic
+// ✅ Ye function sidebar toggle karega
+// Sidebar toggle logic
+// ✅ 1. Sidebar ko Open/Close karne wala function
+function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    if (sidebar) {
+        sidebar.classList.toggle('show');
+    }
+}
 
+// ✅ 2. Sections Switch karne wala logic (Isme Sidebar Auto-Close add kiya hai)
+async function switchPage(pageId, navEl) {
+    // Saare sections hide karo
+    document.querySelectorAll(".pageSection").forEach(s => s.classList.remove("active"));
+    
+    // Chuninda section dikhao
+    const target = document.getElementById(pageId);
+    if (target) target.classList.add("active");
 
+    // Nav links highlight fix
+    document.querySelectorAll(".nav a").forEach(a => a.classList.remove("active"));
+    if (navEl) navEl.classList.add("active");
+
+    // 🔥 MOBILE FIX: Section badalte hi sidebar apne aap band ho jaye
+    if (window.innerWidth <= 1000) {
+        const sidebar = document.querySelector('.sidebar');
+        if (sidebar) sidebar.classList.remove('show');
+    }
+
+    // Aapke purane data load functions yahan call hote rahenge
+    if (pageId === "todayPage") await loadToday();
+    if (pageId === "historyPage") await loadHistory();
+    if (pageId === "performancePage") await loadPerformance();
+    if (pageId === "messagesPage") await loadMyChat();
+}
+
+// ✅ 3. Sidebar ke bahar click karne par band karne ka option (Best for Mobile)
+document.addEventListener('click', (e) => {
+    const sidebar = document.querySelector('.sidebar');
+    const menuBtn = document.querySelector('.mobileMenuBtn');
+    if (sidebar && sidebar.classList.contains('show')) {
+        if (!sidebar.contains(e.target) && !menuBtn.contains(e.target)) {
+            sidebar.classList.remove('show');
+        }
+    }
+});
     init();
     startAutoRefreshIntern();
 
